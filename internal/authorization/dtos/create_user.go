@@ -1,10 +1,11 @@
 package dtos
 
 type CreateUserRequest struct {
-	Name     string
-	Lastname string
-	Nickname string
-	Email    string
-	Phone    int
-	Password string
+	Name     string `json:"name"`
+	Lastname string `json:"lastname"`
+	Nickname string `json:"nickname"`
+	Email    string `json:"email"`
+	Phone    int    `json:"phone"`
+	Password string `json:"password"`
+}
 }
