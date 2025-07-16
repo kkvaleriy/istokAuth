@@ -11,3 +11,7 @@ type handler struct {
 	usecase Usecase
 }
 
+func NewHandler(uc Usecase) *handler {
+	return &handler{usecase: uc}
+}
+
