@@ -12,8 +12,9 @@ import (
 )
 
 const (
-	UserTypeUser  = "USER"
-	UserTypeAdmin = "ADMIN"
+	UserTypeUser     = "USER"
+	UserTypeAdmin    = "ADMIN"
+	minLenOfPassword = 8
 )
 
 type User struct {
@@ -31,7 +32,6 @@ type User struct {
 }
 
 func UserForSignUP(dto *dtos.CreateUserRequest) (*User, error) {
-	minLenOfPassword := 8
 
 	if len(strings.TrimSpace(dto.Name)) < 1 {
 		return nil, errors.New("the name of user is required")
