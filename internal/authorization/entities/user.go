@@ -11,6 +11,11 @@ import (
 	"github.com/kkvaleriy/istokAuthorization/internal/authorization/dtos"
 )
 
+const (
+	UserTypeUser  = "USER"
+	UserTypeAdmin = "ADMIN"
+)
+
 type User struct {
 	Name      string
 	Lastname  string
