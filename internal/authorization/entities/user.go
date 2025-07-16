@@ -10,4 +10,18 @@ import (
 	"github.com/google/uuid"
 	"github.com/kkvaleriy/istokAuthorization/internal/authorization/dtos"
 )
+
+type User struct {
+	Name      string
+	Lastname  string
+	Nickname  string
+	Email     string
+	UserType  string
+	IsActive  bool
+	Phone     int
+	UUID      uuid.UUID
+	PassHash  [32]byte
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
 }
