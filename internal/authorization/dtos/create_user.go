@@ -16,5 +16,7 @@ type CreateUserRequest struct {
 }
 
 type CreateUserResponse struct {
-	UUID uuid.UUID `json:"uuid"`
+	UUID      uuid.UUID `json:"uuid"`
+	UserType  string    `json:"user_type"`
+	CreatedAt time.Time `json:"created_at"`
 }
