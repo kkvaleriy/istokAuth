@@ -7,5 +7,5 @@ import (
 )
 
 type Usecase interface {
-	SignUP(_ context.Context, request *dtos.CreateUserRequest) (*dtos.CreateUserResponse, error)
+	SignUp(_ context.Context, request *dtos.CreateUserRequest) (*dtos.CreateUserResponse, error)
 }

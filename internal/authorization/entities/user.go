@@ -31,7 +31,7 @@ type User struct {
 	UpdatedAt time.Time
 }
 
-func UserForSignUP(dto *dtos.CreateUserRequest) (*User, error) {
+func UserForSignUp(dto *dtos.CreateUserRequest) (*User, error) {
 
 	if len(strings.TrimSpace(dto.Name)) < 1 {
 		return nil, errors.New("the name of user is required")
@@ -66,7 +66,7 @@ func UserForSignUP(dto *dtos.CreateUserRequest) (*User, error) {
 	}, nil
 }
 
-func UserForSignIN(dto *dtos.SignINRequest) (*User, error) {
+func UserForSignIn(dto *dtos.SignINRequest) (*User, error) {
 	if (len(strings.TrimSpace(dto.Email)) < 1 || !strings.Contains(dto.Email, "@")) && dto.Phone < 7_000_000_00_00 {
 		return nil, errors.New("the correct email or phone number of user is required")
 	}
