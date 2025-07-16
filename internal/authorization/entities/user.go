@@ -65,3 +65,13 @@ func UserForSignUP(dto *dtos.CreateUserRequest) (*User, error) {
 		CreatedAt: time.Now(),
 	}, nil
 }
+
+func UserForSignIN(dto *dtos.SignINRequest) (*User, error) {
+	if (len(strings.TrimSpace(dto.Email)) < 1 || !strings.Contains(dto.Email, "@")) && dto.Phone < 7_000_000_00_00 {
+		return nil, errors.New("the correct email or phone number of user is required")
+	}
+	if len(strings.TrimSpace(dto.Password)) < minLenOfPassword {
+		return nil, fmt.Errorf("the password of user can't be empty or less then %v", minLenOfPassword)
+	}
+	return &User{Email: dto.Email, Phone: dto.Phone, PassHash: sha256.Sum256([]byte(dto.Password))}, nil
+}
