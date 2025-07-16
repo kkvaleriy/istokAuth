@@ -20,7 +20,6 @@ func NewCreateUser(repository UserCreator) *createUserUseCase {
 }
 
 func (uc *createUserUseCase) SignUP(_ context.Context, request *dtos.CreateUserRequest) (*dtos.CreateUserResponse, error) {
-
 	userForCreate, err := user.UserForSignUP(request)
 	if err != nil {
 		return nil, err
