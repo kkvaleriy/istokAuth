@@ -15,3 +15,18 @@ func NewHandler(uc Usecase) *handler {
 	return &handler{usecase: uc}
 }
 
+func (h *handler) signUP(c echo.Context) error {
+
+	var request *dtos.CreateUserRequest
+
+	if err := c.Bind(request); err != nil {
+		return echo.NewHTTPError(echo.ErrBadRequest.Code, "bad json in request")
+	}
+
+	response, err := h.usecase.SignUP(c.Request().Context(), request)
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	return c.JSON(http.StatusOK, response)
+}
