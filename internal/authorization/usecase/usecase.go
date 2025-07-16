@@ -1,9 +1,12 @@
 package usecase
 
-import user "github.com/kkvaleriy/istokAuthorization/internal/authorization/entities"
+import (
+	user "github.com/kkvaleriy/istokAuthorization/internal/authorization/entities"
+	"golang.org/x/net/context"
+)
 
 type Repository interface {
-	AddUser(u *user.User) (*user.User, error)
+	AddUser(ctx context.Context, u *user.User) error
 }
 
 type createUserUseCase struct {
