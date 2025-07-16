@@ -10,4 +10,7 @@ type CreateUserRequest struct {
 	Phone    int    `json:"phone"`
 	Password string `json:"password"`
 }
+
+type CreateUserResponse struct {
+	UUID uuid.UUID `json:"uuid"`
 }
