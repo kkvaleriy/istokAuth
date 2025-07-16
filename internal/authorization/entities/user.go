@@ -1,10 +1,13 @@
 package user
 
-type user struct {
-	Name     string
-	Lastname string
-	Nickname string
-	Email    string
-	Phone    int
-	PassHash []byte
+import (
+	"crypto/sha256"
+	"errors"
+	"fmt"
+	"strings"
+	"time"
+
+	"github.com/google/uuid"
+	"github.com/kkvaleriy/istokAuthorization/internal/authorization/dtos"
+)
 }
