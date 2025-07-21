@@ -48,7 +48,7 @@ func UserForSignUp(dto *dtos.CreateUserRequest) (*User, error) {
 	if len(strings.TrimSpace(dto.Password)) < minLenOfPassword {
 		return nil, fmt.Errorf("the password of user must be more than %v characters long", minLenOfPassword)
 	}
-	if dto.Phone < 7_000_000_00_00 {
+	if dto.Phone < 7_000_000_00_00 || dto.Phone > 8_999_999_99_99 {
 		return nil, errors.New("the correct email of user is required")
 	}
 
