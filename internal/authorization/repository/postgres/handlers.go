@@ -25,7 +25,7 @@ func (r *repository) AddUser(ctx context.Context, u *user.User) error {
 		return err
 	}
 
-	_, err = tx.Exec(querys.AddUser, userModel)
+	_, err = tx.Exec(querys.AddUser, userModel.Name, userModel.Lastname, userModel.Nickname, userModel.Email, userModel.UserType, userModel.IsActive, userModel.Phone, userModel.UUID, userModel.PassHash[:], userModel.CreatedAt)
 	if err != nil {
 		tx.Rollback()
 		return err
