@@ -9,10 +9,10 @@ type Repository interface {
 	AddUser(ctx context.Context, u *user.User) error
 }
 
-type createUserUseCase struct {
+type usecase struct {
 	repository Repository
 }
 
-func NewCreateUser(repository Repository) *createUserUseCase {
-	return &createUserUseCase{repository: repository}
+func New(repository Repository) *usecase {
+	return &usecase{repository: repository}
 }
