@@ -17,7 +17,7 @@ func NewHandler(uc Usecase) *handler {
 
 func (h *handler) signUp(c echo.Context) error {
 
-	var request *dtos.CreateUserRequest
+	request := &dtos.CreateUserRequest{}
 
 	if err := c.Bind(request); err != nil {
 		return echo.NewHTTPError(echo.ErrBadRequest.Code, "bad json in request")
