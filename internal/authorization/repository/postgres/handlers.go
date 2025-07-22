@@ -2,7 +2,9 @@ package postgres
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/jackc/pgx"
 	"github.com/jackc/pgx/v5/pgxpool"
 	user "github.com/kkvaleriy/istokAuthorization/internal/authorization/entities"
 	"github.com/kkvaleriy/istokAuthorization/internal/authorization/repository/postgres/querys"
@@ -25,9 +27,12 @@ func (r *repository) AddUser(ctx context.Context, u *user.User) error {
 	}
 	defer tx.Rollback(ctx)
 
-	//_, err = tx.Query(ctx, "INSERT INTO users (name, email) VALUES (@me, @ail)", userModel)
+	// TODO: check uniq 23505
 	_, err = tx.Exec(ctx, querys.AddUser, args)
 	if err != nil {
+		if pgxErr, ok := err.(pgx.PgError); ok && pgxErr.Code == "23505" {
+			return fmt.Errorf("Not uniq user: %w", err)
+		}
 		return err
 	}
 
