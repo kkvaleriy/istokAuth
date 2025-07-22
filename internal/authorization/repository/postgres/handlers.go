@@ -3,34 +3,35 @@ package postgres
 import (
 	"context"
 
-	"github.com/jmoiron/sqlx"
+	"github.com/jackc/pgx/v5/pgxpool"
 	user "github.com/kkvaleriy/istokAuthorization/internal/authorization/entities"
 	"github.com/kkvaleriy/istokAuthorization/internal/authorization/repository/postgres/querys"
 )
 
 type repository struct {
-	db *sqlx.DB
+	db *pgxpool.Pool
 }
 
-func New(db *sqlx.DB) *repository {
+func New(db *pgxpool.Pool) *repository {
 	return &repository{db: db}
 }
 
 func (r *repository) AddUser(ctx context.Context, u *user.User) error {
+	args := createUserArgs(u)
 
-	userModel := newCreateUserModel(u)
+	tx, err := r.db.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback(ctx)
 
-	tx, err := r.db.Begin()
+	//_, err = tx.Query(ctx, "INSERT INTO users (name, email) VALUES (@me, @ail)", userModel)
+	_, err = tx.Exec(ctx, querys.AddUser, args)
 	if err != nil {
 		return err
 	}
 
-	_, err = tx.Exec(querys.AddUser, userModel.Name, userModel.Lastname, userModel.Nickname, userModel.Email, userModel.UserType, userModel.IsActive, userModel.Phone, userModel.UUID, userModel.PassHash[:], userModel.CreatedAt)
-	if err != nil {
-		tx.Rollback()
-		return err
-	}
-	err = tx.Commit()
+	err = tx.Commit(ctx)
 	if err != nil {
 		return err
 	}
