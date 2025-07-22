@@ -1,10 +1,15 @@
 package v1
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/kkvaleriy/istokAuthorization/internal/authorization/dtos"
 	"github.com/labstack/echo/v4"
+)
+
+var (
+	ErrNotUniqUser = errors.New("Not uniq user:")
 )
 
 type handler struct {
@@ -25,6 +30,9 @@ func (h *handler) signUp(c echo.Context) error {
 
 	response, err := h.usecase.SignUp(c.Request().Context(), request)
 	if err != nil {
+		if errors.Is(err, ErrNotUniqUser) {
+			return echo.ErrConflict
+		}
 		return echo.ErrInternalServerError
 	}
 
