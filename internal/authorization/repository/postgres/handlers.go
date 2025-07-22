@@ -27,7 +27,6 @@ func (r *repository) AddUser(ctx context.Context, u *user.User) error {
 	}
 	defer tx.Rollback(ctx)
 
-	// TODO: check uniq 23505
 	_, err = tx.Exec(ctx, querys.AddUser, args)
 	if err != nil {
 		if pgxErr, ok := err.(pgx.PgError); ok && pgxErr.Code == "23505" {
