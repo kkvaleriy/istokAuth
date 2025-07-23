@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrNotUniqUser = errors.New("Not uniq user:")
+	ErrNotUniqUser = errors.New("not uniq user.")
 )
 
 type logger interface {
