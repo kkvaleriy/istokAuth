@@ -33,16 +33,31 @@ func (h *handler) signUp(c echo.Context) error {
 	request := &dtos.CreateUserRequest{}
 
 	if err := c.Bind(request); err != nil {
+		body := []byte{}
+
+		c.Request().Body.Read(body)
+		defer c.Request().Body.Close()
+		h.log.Error("can't parse json in request", "host", c.Request().Host, "URL", c.Request().URL, "body", body, "error", err)
+
 		return echo.NewHTTPError(echo.ErrBadRequest.Code, "bad json in request")
 	}
+
+	h.log.Debug("request for signup", "host", c.Request().Host, "URL", c.Request().URL, "request", request)
 
 	response, err := h.usecase.SignUp(c.Request().Context(), request)
 	if err != nil {
 		if errors.Is(err, ErrNotUniqUser) {
+			h.log.Error("not uniq user", "host", c.Request().Host, "URL", c.Request().URL, "request", request, "error", err)
+
 			return echo.ErrConflict
 		}
+
+		h.log.Error("unexpected error", "error", err)
+
 		return echo.ErrInternalServerError
 	}
+
+	h.log.Info("new user has been created", "host", c.Request().Host, "URL", c.Request().URL, "request", request, "result", response)
 
 	return c.JSON(http.StatusOK, response)
 }
