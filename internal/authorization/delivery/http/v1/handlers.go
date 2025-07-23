@@ -12,12 +12,20 @@ var (
 	ErrNotUniqUser = errors.New("Not uniq user:")
 )
 
-type handler struct {
-	usecase Usecase
+type logger interface {
+	Debug(msg string, args ...any)
+	Info(msg string, args ...any)
+	Warn(msg string, args ...any)
+	Error(msg string, args ...any)
 }
 
-func NewHandler(uc Usecase) *handler {
-	return &handler{usecase: uc}
+type handler struct {
+	usecase Usecase
+	log     logger
+}
+
+func NewHandler(uc Usecase, log logger) *handler {
+	return &handler{usecase: uc, log: log}
 }
 
 func (h *handler) signUp(c echo.Context) error {
