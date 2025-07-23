@@ -10,12 +10,20 @@ import (
 	"github.com/kkvaleriy/istokAuthorization/internal/authorization/repository/postgres/querys"
 )
 
-type repository struct {
-	db *pgxpool.Pool
+type logger interface {
+	Debug(msg string, args ...any)
+	Info(msg string, args ...any)
+	Warn(msg string, args ...any)
+	Error(msg string, args ...any)
 }
 
-func New(db *pgxpool.Pool) *repository {
-	return &repository{db: db}
+type repository struct {
+	db  *pgxpool.Pool
+	log logger
+}
+
+func New(db *pgxpool.Pool, log logger) *repository {
+	return &repository{db: db, log: log}
 }
 
 func (r *repository) AddUser(ctx context.Context, u *user.User) error {
