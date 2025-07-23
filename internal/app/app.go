@@ -15,15 +15,24 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
+type logger interface {
+	Debug(msg string, args ...any)
+	Info(msg string, args ...any)
+	Warn(msg string, args ...any)
+	Error(msg string, args ...any)
+}
+
 type app struct {
 	db   *pgxpool.Pool
 	echo *echo.Echo
+	log  logger
 }
 
-func New(db *pgxpool.Pool, e *echo.Echo) *app {
+func New(db *pgxpool.Pool, e *echo.Echo, log logger) *app {
 	return &app{
 		db:   db,
 		echo: e,
+		log:  log,
 	}
 }
 
@@ -40,9 +49,11 @@ func (app *app) Run() error {
 		return c.String(http.StatusOK, "Hello, world!")
 	})
 
-	pg := postgres.New(app.db)
-	uc := usecase.New(pg)
-	ht := v1.NewHandler(uc)
+	app.log.Debug("added route for /api/v1")
+
+	pg := postgres.New(app.db, app.log)
+	uc := usecase.New(pg, app.log)
+	ht := v1.NewHandler(uc, app.log)
 
 	ht.Routes(domain)
 
