@@ -53,7 +53,7 @@ func (app *app) Run() error {
 	gracefulShutdownWG := &sync.WaitGroup{}
 	gracefulShutdownWG.Add(1)
 
-	domain := app.echo.Group("/api/v1")
+	domain := app.server.echo.Group("/api/v1")
 	domain.GET("/ping", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, world!")
 	})
@@ -66,15 +66,14 @@ func (app *app) Run() error {
 
 	ht.Routes(domain)
 
-	err := app.echo.Start(":8080")
+	err := app.server.echo.Start(app.server.cfg.ServerPort())
 	if err != nil {
 		log.Errorf("error of start server: %v", err)
 	}
 
 	go func() {
 		<-sysQuit
-
-		err = app.echo.Close()
+		err = app.server.echo.Close()
 		if err != nil {
 			log.Fatalf("can't stop server: %s", err.Error())
 		}
