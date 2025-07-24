@@ -44,9 +44,14 @@ func (l logger) Info(msg string, args ...any) {
 }
 
 func (l logger) Warn(msg string, args ...any) {
-	l.log.Info(msg, args...)
+	l.log.Warn(msg, args...)
 }
 
 func (l logger) Error(msg string, args ...any) {
-	l.log.Info(msg, args...)
+	l.log.Error(msg, args...)
+}
+
+func (l logger) Fatal(msg string, args ...any) {
+	l.log.Error(msg, args...)
+	os.Exit(1)
 }
