@@ -71,6 +71,7 @@ func (app *app) Run() error {
 
 	go func() {
 		<-sysQuit
+		app.db.Close()
 		app.log.Info("the database connection has been successfully closed")
 		err = app.server.echo.Close()
 		if err != nil {
