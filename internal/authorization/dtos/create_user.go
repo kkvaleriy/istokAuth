@@ -20,3 +20,13 @@ type CreateUserResponse struct {
 	UserType  string    `json:"user_type"`
 	CreatedAt time.Time `json:"created_at"`
 }
+
+type ValidationError struct {
+	Message string
+	Field   string
+	Value   string
+}
+
+func (v ValidationError) Error() string {
+	return v.Message
+}
