@@ -2,9 +2,8 @@ package postgres
 
 import (
 	"context"
-	"fmt"
 
-	"github.com/jackc/pgx"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 	user "github.com/kkvaleriy/istokAuthorization/internal/authorization/entities"
 	"github.com/kkvaleriy/istokAuthorization/internal/authorization/repository/postgres/querys"
@@ -39,8 +38,9 @@ func (r *repository) AddUser(ctx context.Context, u *user.User) error {
 
 	_, err = tx.Exec(ctx, querys.AddUser, args)
 	if err != nil {
-		if pgxErr, ok := err.(pgx.PgError); ok && pgxErr.Code == "23505" {
-			return fmt.Errorf("not uniq user. %w", err)
+
+		if pgErr, ok := err.(*pgconn.PgError); ok && pgErr.Code == "23505" {
+			return ErrorValidation(pgErr.ConstraintName, args)
 		}
 		return err
 	}
