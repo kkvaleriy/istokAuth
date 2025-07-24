@@ -20,19 +20,26 @@ type logger interface {
 	Info(msg string, args ...any)
 	Warn(msg string, args ...any)
 	Error(msg string, args ...any)
+type serverCfg interface {
+	ServerPort() string
+}
+
+type server struct {
+	echo *echo.Echo
+	cfg  serverCfg
 }
 
 type app struct {
-	db   *pgxpool.Pool
-	echo *echo.Echo
-	log  logger
+	db     *pgxpool.Pool
+	server *server
+	log    logger
 }
 
-func New(db *pgxpool.Pool, e *echo.Echo, log logger) *app {
+func New(db *pgxpool.Pool, e *echo.Echo, sCfg serverCfg, log logger) *app {
 	return &app{
-		db:   db,
-		echo: e,
-		log:  log,
+		db:     db,
+		server: &server{echo: e, cfg: sCfg},
+		log:    log,
 	}
 }
 
