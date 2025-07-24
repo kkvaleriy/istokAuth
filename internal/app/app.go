@@ -12,7 +12,6 @@ import (
 	"github.com/kkvaleriy/istokAuthorization/internal/authorization/repository/postgres"
 	"github.com/kkvaleriy/istokAuthorization/internal/authorization/usecase"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/gommon/log"
 )
 
 type logger interface {
