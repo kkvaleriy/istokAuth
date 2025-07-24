@@ -58,8 +58,6 @@ func (app *app) Run() error {
 		return c.String(http.StatusOK, "Hello, world!")
 	})
 
-	app.log.Debug("added route for /api/v1")
-
 	pg := postgres.New(app.db, app.log)
 	uc := usecase.New(pg, app.log)
 	ht := v1.NewHandler(uc, app.log)
@@ -68,15 +66,17 @@ func (app *app) Run() error {
 
 	err := app.server.echo.Start(app.server.cfg.ServerPort())
 	if err != nil {
-		log.Errorf("error of start server: %v", err)
+		app.log.Fatal("server startup error", "error", err.Error())
 	}
 
 	go func() {
 		<-sysQuit
+		app.log.Info("the database connection has been successfully closed")
 		err = app.server.echo.Close()
 		if err != nil {
-			log.Fatalf("can't stop server: %s", err.Error())
+			app.log.Fatal("the server shutdown error", err.Error())
 		}
+		app.log.Info("the server has been successfully stopped")
 	}()
 
 	gracefulShutdownWG.Wait()
