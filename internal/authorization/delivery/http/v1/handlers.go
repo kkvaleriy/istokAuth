@@ -46,10 +46,11 @@ func (h *handler) signUp(c echo.Context) error {
 
 	response, err := h.usecase.SignUp(c.Request().Context(), request)
 	if err != nil {
-		if errors.Is(err, ErrNotUniqUser) {
-			h.log.Error("not uniq user", "host", c.Request().Host, "URL", c.Request().URL, "request", request, "error", err)
+		var validationError *dtos.ValidationError
+		if errors.As(err, &validationError) {
+			h.log.Error("not uniq user", "host", c.Request().Host, "URL", c.Request().URL, "request", request, "error", validationError.Error())
 
-			return echo.ErrConflict
+			return c.String(http.StatusConflict, err.Error())
 		}
 
 		h.log.Error("unexpected error", "error", err)
