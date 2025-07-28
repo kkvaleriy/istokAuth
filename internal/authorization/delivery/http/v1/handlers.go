@@ -39,7 +39,7 @@ func (h *handler) signUp(c echo.Context) error {
 		defer c.Request().Body.Close()
 		h.log.Error("can't parse json in request", "host", c.Request().Host, "URL", c.Request().URL, "body", body, "error", err)
 
-		return echo.NewHTTPError(echo.ErrBadRequest.Code, "bad json in request")
+		return c.String(http.StatusBadRequest, "bad json in request")
 	}
 
 	h.log.Debug("request for signup", "host", c.Request().Host, "URL", c.Request().URL, "request", request)
@@ -55,7 +55,7 @@ func (h *handler) signUp(c echo.Context) error {
 
 		h.log.Error("unexpected error", "error", err)
 
-		return echo.ErrInternalServerError
+		return c.String(http.StatusInternalServerError, "Internal server error")
 	}
 
 	h.log.Info("new user has been created", "host", c.Request().Host, "URL", c.Request().URL, "request", request, "result", response)
