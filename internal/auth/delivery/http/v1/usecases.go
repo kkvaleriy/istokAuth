@@ -3,7 +3,7 @@ package v1
 import (
 	"context"
 
-	"github.com/kkvaleriy/istokAuthorization/internal/authorization/dtos"
+	"github.com/kkvaleriy/istokAuth/internal/auth/dtos"
 )
 
 type Usecase interface {

@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	user "github.com/kkvaleriy/istokAuthorization/internal/authorization/entities"
+	user "github.com/kkvaleriy/istokAuth/internal/auth/entities"
 	"golang.org/x/net/context"
 )
 

@@ -1,7 +1,7 @@
 package v1
 
 import (
-	_ "github.com/kkvaleriy/istokAuthorization/docs"
+	_ "github.com/kkvaleriy/istokAuth/docs"
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )

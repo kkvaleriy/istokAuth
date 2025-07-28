@@ -8,9 +8,9 @@ import (
 	"syscall"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	v1 "github.com/kkvaleriy/istokAuthorization/internal/authorization/delivery/http/v1"
-	"github.com/kkvaleriy/istokAuthorization/internal/authorization/repository/postgres"
-	"github.com/kkvaleriy/istokAuthorization/internal/authorization/usecase"
+	v1 "github.com/kkvaleriy/istokAuth/internal/auth/delivery/http/v1"
+	"github.com/kkvaleriy/istokAuth/internal/auth/repository/postgres"
+	"github.com/kkvaleriy/istokAuth/internal/auth/usecase"
 	"github.com/labstack/echo/v4"
 )
 

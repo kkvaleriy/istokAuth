@@ -3,8 +3,8 @@ package usecase
 import (
 	"context"
 
-	"github.com/kkvaleriy/istokAuthorization/internal/authorization/dtos"
-	user "github.com/kkvaleriy/istokAuthorization/internal/authorization/entities"
+	"github.com/kkvaleriy/istokAuth/internal/auth/dtos"
+	user "github.com/kkvaleriy/istokAuth/internal/auth/entities"
 )
 
 func (uc *usecase) SignUp(ctx context.Context, request *dtos.CreateUserRequest) (*dtos.CreateUserResponse, error) {

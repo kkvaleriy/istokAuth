@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/jackc/pgx/v5"
-	"github.com/kkvaleriy/istokAuthorization/internal/authorization/dtos"
-	user "github.com/kkvaleriy/istokAuthorization/internal/authorization/entities"
+	"github.com/kkvaleriy/istokAuth/internal/auth/dtos"
+	user "github.com/kkvaleriy/istokAuth/internal/auth/entities"
 )
 
 func createUserArgs(u *user.User) pgx.NamedArgs {

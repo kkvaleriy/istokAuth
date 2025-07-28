@@ -2,9 +2,11 @@ package v1
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
-	"github.com/kkvaleriy/istokAuthorization/internal/authorization/dtos"
+	"github.com/go-playground/validator/v10"
+	"github.com/kkvaleriy/istokAuth/internal/auth/dtos"
 	"github.com/labstack/echo/v4"
 )
 
@@ -54,6 +56,16 @@ func (h *handler) signUp(c echo.Context) error {
 	}
 
 	h.log.Debug("request for signup", "host", c.Request().Host, "URL", c.Request().URL, "request", request)
+
+	validate := validator.New()
+	err := validate.Struct(request)
+	if err != nil {
+		failedValidate := "fields that failed to validate: "
+		for _, err := range err.(validator.ValidationErrors) {
+			failedValidate = fmt.Sprintf("%s%s:%s:%s ", failedValidate, err.Field(), err.Tag(), err.Error())
+		}
+		return c.String(http.StatusBadRequest, failedValidate)
+	}
 
 	response, err := h.usecase.SignUp(c.Request().Context(), request)
 	if err != nil {

@@ -1,1 +1,1 @@
-# istokAuthorization
+# istokAuth

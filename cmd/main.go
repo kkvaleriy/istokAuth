@@ -4,15 +4,15 @@ import (
 	"context"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/kkvaleriy/istokAuthorization/internal/app"
-	"github.com/kkvaleriy/istokAuthorization/internal/config"
-	"github.com/kkvaleriy/istokAuthorization/pkg/logger"
+	"github.com/kkvaleriy/istokAuth/internal/app"
+	"github.com/kkvaleriy/istokAuth/internal/config"
+	"github.com/kkvaleriy/istokAuth/pkg/logger"
 	"github.com/labstack/echo/v4"
 )
 
-// @title IstokAuthorization
+// @title IstokAuth
 // @version 1.0.0
-// @description Authorization service
+// @description Auth service
 
 // @host localhost:8080
 // @BasePath /api/v1

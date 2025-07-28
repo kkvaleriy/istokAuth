@@ -5,8 +5,8 @@ import (
 
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
-	user "github.com/kkvaleriy/istokAuthorization/internal/authorization/entities"
-	"github.com/kkvaleriy/istokAuthorization/internal/authorization/repository/postgres/querys"
+	user "github.com/kkvaleriy/istokAuth/internal/auth/entities"
+	"github.com/kkvaleriy/istokAuth/internal/auth/repository/postgres/querys"
 )
 
 type logger interface {

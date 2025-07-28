@@ -8,12 +8,12 @@ import (
 
 // @Description User account information for registration
 type CreateUserRequest struct {
-	Name     string `json:"name" example:"John"`
-	Lastname string `json:"lastname" example:"Doe"`
-	Nickname string `json:"nickname" example:"Johny1"`
-	Email    string `json:"email" example:"john@email.com"`
-	Phone    int    `json:"phone" example:"79990001122"`
-	Password string `json:"password" example:"mySuperPass"`
+	Name     string `json:"name" example:"John" validate:"required"`
+	Lastname string `json:"lastname" example:"Doe" validate:"required"`
+	Nickname string `json:"nickname" example:"Johny1" validate:"required"`
+	Email    string `json:"email" example:"john@email.com" validate:"required,email"`
+	Phone    int    `json:"phone" example:"79990001122" validate:"required,len=11"`
+	Password string `json:"password" example:"mySuperPass" validate:"required,min=8"`
 }
 
 // @Description Information about the user's account after successful registration

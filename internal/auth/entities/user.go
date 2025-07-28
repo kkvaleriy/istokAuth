@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/kkvaleriy/istokAuthorization/internal/authorization/dtos"
+	"github.com/kkvaleriy/istokAuth/internal/auth/dtos"
 )
 
 const (
