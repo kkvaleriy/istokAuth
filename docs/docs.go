@@ -73,6 +73,14 @@ const docTemplate = `{
         "dtos.CreateUserRequest": {
             "description": "User account information for registration",
             "type": "object",
+            "required": [
+                "email",
+                "lastname",
+                "name",
+                "nickname",
+                "password",
+                "phone"
+            ],
             "properties": {
                 "email": {
                     "type": "string",
@@ -92,6 +100,7 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string",
+                    "minLength": 8,
                     "example": "mySuperPass"
                 },
                 "phone": {
@@ -106,7 +115,7 @@ const docTemplate = `{
             "properties": {
                 "created_at": {
                     "type": "string",
-                    "example": "20060102 03:04:05"
+                    "example": "2006-01-02T03:04:05.5141511+03:00"
                 },
                 "user_type": {
                     "type": "string",
@@ -127,8 +136,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8080",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "IstokAuthorization",
-	Description:      "Authorization service",
+	Title:            "IstokAuth",
+	Description:      "Auth service",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",
