@@ -10,6 +10,12 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// @title IstokAuthorization
+// @version 1.0.0
+// @description Authorization service
+
+// @host localhost:8080
+// @BasePath /api/v1
 func main() {
 	cfg := config.New()
 	log := logger.New(cfg.Logger.Level)
