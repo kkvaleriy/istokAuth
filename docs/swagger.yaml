@@ -1,0 +1,80 @@
+basePath: /api/v1
+definitions:
+  dtos.CreateUserRequest:
+    description: User account information for registration
+    properties:
+      email:
+        example: john@email.com
+        type: string
+      lastname:
+        example: Doe
+        type: string
+      name:
+        example: John
+        type: string
+      nickname:
+        example: Johny1
+        type: string
+      password:
+        example: mySuperPass
+        type: string
+      phone:
+        example: 79990001122
+        type: integer
+    type: object
+  dtos.CreateUserResponse:
+    description: Information about the user's account after successful registration
+    properties:
+      created_at:
+        example: 20060102 03:04:05
+        type: string
+      user_type:
+        example: USER
+        type: string
+      uuid:
+        example: 16763be4-6022-406e-a950-fcd5018633ca
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Authorization service
+  title: IstokAuthorization
+  version: 1.0.0
+paths:
+  /signup:
+    post:
+      consumes:
+      - application/json
+      description: Registering a new user
+      parameters:
+      - description: Account information for signup
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateUserRequest'
+      produces:
+      - application/json
+      - text/plain
+      responses:
+        "200":
+          description: Information about the user's account after successful registration
+          schema:
+            $ref: '#/definitions/dtos.CreateUserResponse'
+        "400":
+          description: Bad json in request
+          schema:
+            type: string
+        "409":
+          description: A user already exists
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Registering a new user
+      tags:
+      - Authorization
+swagger: "2.0"
