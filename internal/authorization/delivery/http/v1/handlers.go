@@ -28,6 +28,17 @@ func NewHandler(uc Usecase, log logger) *handler {
 	return &handler{usecase: uc, log: log}
 }
 
+// @Summary Registering a new user
+// @Tags Authorization
+// @Description Registering a new user
+// @Accept json
+// @Produce json,plain
+// @Param input body dtos.CreateUserRequest true "Account information for signup"
+// @Success 200 {object} dtos.CreateUserResponse "Information about the user's account after successful registration"
+// @Failure 409 {string} string "A user already exists"
+// @Failure 400 {string} string "Bad json in request"
+// @Failure 500 {string} string "Internal server error"
+// @Router /signup [post]
 func (h *handler) signUp(c echo.Context) error {
 
 	request := &dtos.CreateUserRequest{}
