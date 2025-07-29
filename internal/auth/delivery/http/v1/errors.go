@@ -18,7 +18,7 @@ type JSONParseError struct {
 }
 
 func (e *JSONParseError) Error() string {
-	return fmt.Sprintf("bad json in request: %s", e.Err.Error())
+	return fmt.Sprintf("Bad json in request: %s", e.Err.Error())
 }
 
 func (e *JSONParseError) StatusCode() int {
@@ -36,7 +36,7 @@ func ErrValidation(err error) *ValidationError {
 	}
 	fields := []string{}
 	for _, e := range errValidation {
-		fields = append(fields, fmt.Sprintf("%s:%s"), e.Field(), e.Tag())
+		fields = append(fields, fmt.Sprintf("%s:%s", e.Field(), e.Tag()))
 	}
 	return &ValidationError{Fields: fields}
 }
@@ -73,28 +73,32 @@ func ErrorsHandler(log logger) echo.HTTPErrorHandler {
 		switch e := err.(type) {
 		case *JSONParseError:
 			status = e.StatusCode()
-			message = e.Error()
+			message = map[string]interface{}{
+				"error": e.Error()}
 		case *ValidationError:
 			status = e.StatusCode()
 			message = map[string]interface{}{
-				"error":  "validation failed",
+				"error":  e.Error(),
 				"fields": e.Fields,
 			}
-		case *ValidationErrorDTO:
+		case *ValidationDTOError:
 			status = e.StatusCode()
-			message = e.Error()
+			message = map[string]interface{}{
+				"error": e.Error()}
 		case *echo.HTTPError:
 			status = e.Code
-			message = e.Message
+			message = map[string]interface{}{
+				"error": e.Error()}
 		default:
 			status = http.StatusInternalServerError
-			message = "Internal server error"
+			message = map[string]interface{}{
+				"error": "Internal server error"}
 		}
 
-		log.Error("Error: %s, Status: %d", err.Error(), status)
+		log.Error("request error", "error", err.Error(), "status", status)
 
 		if err := c.JSON(status, message); err != nil {
-			log.Error("Failed to send error response: %s", err)
+			log.Error("failed to send error response", "error", err.Error())
 		}
 	}
 }
