@@ -13,12 +13,17 @@ type HTTPError interface {
 	StatusCode() int
 }
 
+// @Description Bad request
+type badRequestErrorResponse struct {
+	Error string `json:"error" example:"Bad request"`
+}
+
 type BadRequestError struct {
 	Err error
 }
 
 func (e *BadRequestError) Error() string {
-	return fmt.Sprintf("Bad json in request: %s", e.Err.Error())
+	return fmt.Sprintf("Bad request: %s", e.Err.Error())
 }
 
 func (e *BadRequestError) StatusCode() int {
@@ -52,7 +57,7 @@ func (e *ValidationError) Error() string {
 }
 
 func (e *ValidationError) StatusCode() int {
-	return http.StatusBadRequest
+	return http.StatusUnprocessableEntity
 }
 
 // @Description Uniqueness error
