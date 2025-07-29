@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/kkvaleriy/istokAuth/internal/auth/dtos"
+	"github.com/kkvaleriy/istokAuth/internal/auth/usecase"
 	"github.com/labstack/echo/v4"
 )
 
@@ -22,11 +23,11 @@ type logger interface {
 }
 
 type handler struct {
-	usecase Usecase
+	usecase usecase.Authentificator
 	log     logger
 }
 
-func NewHandler(uc Usecase, log logger) *handler {
+func NewHandler(uc usecase.Authentificator, log logger) *handler {
 	return &handler{usecase: uc, log: log}
 }
 
