@@ -52,7 +52,7 @@ func (h *handler) signUp(c echo.Context) error {
 		defer c.Request().Body.Close()
 		h.log.Error("can't parse json in request", "host", c.Request().Host, "URL", c.Request().URL, "body", body, "error", err)
 
-		return &JSONParseError{Err: err}
+		return &BadRequestError{Err: err}
 	}
 
 	h.log.Debug("request for signup", "host", c.Request().Host, "URL", c.Request().URL, "request", request)

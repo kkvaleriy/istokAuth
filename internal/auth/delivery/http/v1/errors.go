@@ -13,15 +13,15 @@ type HTTPError interface {
 	StatusCode() int
 }
 
-type JSONParseError struct {
+type BadRequestError struct {
 	Err error
 }
 
-func (e *JSONParseError) Error() string {
+func (e *BadRequestError) Error() string {
 	return fmt.Sprintf("Bad json in request: %s", e.Err.Error())
 }
 
-func (e *JSONParseError) StatusCode() int {
+func (e *BadRequestError) StatusCode() int {
 	return http.StatusBadRequest
 }
 
@@ -87,7 +87,7 @@ func ErrorsHandler(log logger) echo.HTTPErrorHandler {
 		var message interface{}
 
 		switch e := err.(type) {
-		case *JSONParseError:
+		case *BadRequestError:
 			status = e.StatusCode()
 			message = map[string]interface{}{
 				"error": e.Error()}
