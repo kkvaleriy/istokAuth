@@ -37,9 +37,9 @@ func NewHandler(uc usecase.Authentificator, log logger) *handler {
 // @Produce json,plain
 // @Param input body dtos.CreateUserRequest true "Account information for signup"
 // @Success 200 {object} dtos.CreateUserResponse "Information about the user's account after successful registration"
-// @Failure 409 {string} string "A user already exists"
-// @Failure 400 {string} string "Bad json in request"
-// @Failure 500 {string} string "Internal server error"
+// @Failure 409 {object} validationDTOErrorResponse "A user already exists"
+// @Failure 400 {object} validationErrorResponse "Bad json in request"
+// @Failure 500 {object} internalServerErrorResponse "Internal server error"
 // @Router /signup [post]
 func (h *handler) signUp(c echo.Context) error {
 
