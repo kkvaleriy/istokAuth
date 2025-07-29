@@ -22,8 +22,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "produces": [
-                    "application/json",
-                    "text/plain"
+                    "application/json"
                 ],
                 "tags": [
                     "Authorization"
@@ -50,19 +49,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad json in request",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/v1.validationErrorResponse"
                         }
                     },
                     "409": {
                         "description": "A user already exists",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/v1.validationDTOErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/v1.internalServerErrorResponse"
                         }
                     }
                 }
@@ -124,6 +123,45 @@ const docTemplate = `{
                 "uuid": {
                     "type": "string",
                     "example": "16763be4-6022-406e-a950-fcd5018633ca"
+                }
+            }
+        },
+        "v1.internalServerErrorResponse": {
+            "description": "Internal server error",
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "Internal server error"
+                }
+            }
+        },
+        "v1.validationDTOErrorResponse": {
+            "description": "Uniqueness error",
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "A user with the nickname Johny1 already exists"
+                }
+            }
+        },
+        "v1.validationErrorResponse": {
+            "description": "JSON validate error",
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "Bad json in request"
+                },
+                "fields": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "example": [
+                        "email:required"
+                    ]
                 }
             }
         }

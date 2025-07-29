@@ -43,6 +43,33 @@ definitions:
         example: 16763be4-6022-406e-a950-fcd5018633ca
         type: string
     type: object
+  v1.internalServerErrorResponse:
+    description: Internal server error
+    properties:
+      error:
+        example: Internal server error
+        type: string
+    type: object
+  v1.validationDTOErrorResponse:
+    description: Uniqueness error
+    properties:
+      error:
+        example: A user with the nickname Johny1 already exists
+        type: string
+    type: object
+  v1.validationErrorResponse:
+    description: JSON validate error
+    properties:
+      error:
+        example: Bad json in request
+        type: string
+      fields:
+        example:
+        - email:required
+        items:
+          type: string
+        type: array
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -64,7 +91,6 @@ paths:
           $ref: '#/definitions/dtos.CreateUserRequest'
       produces:
       - application/json
-      - text/plain
       responses:
         "200":
           description: Information about the user's account after successful registration
@@ -73,15 +99,15 @@ paths:
         "400":
           description: Bad json in request
           schema:
-            type: string
+            $ref: '#/definitions/v1.validationErrorResponse'
         "409":
           description: A user already exists
           schema:
-            type: string
+            $ref: '#/definitions/v1.validationDTOErrorResponse'
         "500":
           description: Internal server error
           schema:
-            type: string
+            $ref: '#/definitions/v1.internalServerErrorResponse'
       summary: Registering a new user
       tags:
       - Authorization
