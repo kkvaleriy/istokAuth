@@ -34,7 +34,7 @@ func NewHandler(uc usecase.Authentificator, log logger) *handler {
 // @Tags Authorization
 // @Description Registering a new user
 // @Accept json
-// @Produce json,plain
+// @Produce json
 // @Param input body dtos.CreateUserRequest true "Account information for signup"
 // @Success 200 {object} dtos.CreateUserResponse "Information about the user's account after successful registration"
 // @Failure 409 {object} validationDTOErrorResponse "A user already exists"
