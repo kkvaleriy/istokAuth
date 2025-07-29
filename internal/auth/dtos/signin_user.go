@@ -1,6 +1,6 @@
 package dtos
 
-type SignINRequest struct {
+type SignInRequest struct {
 	Email    string `json:"email"`
 	Phone    int    `json:"phone"`
 	Password string `json:"password"`
