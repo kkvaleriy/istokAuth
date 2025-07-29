@@ -67,7 +67,7 @@ func (h *handler) signUp(c echo.Context) error {
 	if err != nil {
 		var validationError *dtos.ValidationError
 		if errors.As(err, &validationError) {
-			return &ValidationErrorDTO{Err: validationError}
+			return &ValidationDTOError{Err: validationError}
 		}
 
 		return err
@@ -75,5 +75,5 @@ func (h *handler) signUp(c echo.Context) error {
 
 	h.log.Info("new user has been created", "host", c.Request().Host, "URL", c.Request().URL, "request", request, "result", response)
 
-	return c.JSON(http.StatusOK, response)
+	return c.JSON(http.StatusCreated, response)
 }
