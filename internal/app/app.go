@@ -53,6 +53,8 @@ func (app *app) Run() error {
 	gracefulShutdownWG := &sync.WaitGroup{}
 	gracefulShutdownWG.Add(1)
 
+	app.server.echo.HTTPErrorHandler = v1.ErrorsHandler(app.log)
+
 	domain := app.server.echo.Group("/api/v1")
 	domain.GET("/ping", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, world!")

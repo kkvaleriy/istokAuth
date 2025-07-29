@@ -2,7 +2,6 @@ package v1
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
@@ -53,7 +52,7 @@ func (h *handler) signUp(c echo.Context) error {
 		defer c.Request().Body.Close()
 		h.log.Error("can't parse json in request", "host", c.Request().Host, "URL", c.Request().URL, "body", body, "error", err)
 
-		return c.String(http.StatusBadRequest, "bad json in request")
+		return &JSONParseError{Err: err}
 	}
 
 	h.log.Debug("request for signup", "host", c.Request().Host, "URL", c.Request().URL, "request", request)
@@ -61,25 +60,17 @@ func (h *handler) signUp(c echo.Context) error {
 	validate := validator.New()
 	err := validate.Struct(request)
 	if err != nil {
-		failedValidate := "fields that failed to validate: "
-		for _, err := range err.(validator.ValidationErrors) {
-			failedValidate = fmt.Sprintf("%s%s:%s:%s ", failedValidate, err.Field(), err.Tag(), err.Error())
-		}
-		return c.String(http.StatusBadRequest, failedValidate)
+		return ErrValidation(err)
 	}
 
 	response, err := h.usecase.SignUp(c.Request().Context(), request)
 	if err != nil {
 		var validationError *dtos.ValidationError
 		if errors.As(err, &validationError) {
-			h.log.Error("not uniq user", "host", c.Request().Host, "URL", c.Request().URL, "request", request, "error", validationError.Error())
-
-			return c.String(http.StatusConflict, err.Error())
+			return &ValidationErrorDTO{Err: validationError}
 		}
 
-		h.log.Error("unexpected error", "error", err)
-
-		return c.String(http.StatusInternalServerError, "Internal server error")
+		return err
 	}
 
 	h.log.Info("new user has been created", "host", c.Request().Host, "URL", c.Request().URL, "request", request, "result", response)
