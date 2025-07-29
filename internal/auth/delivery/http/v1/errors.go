@@ -25,6 +25,12 @@ func (e *JSONParseError) StatusCode() int {
 	return http.StatusBadRequest
 }
 
+// @Description JSON validate error
+type validationErrorResponse struct {
+	Error  string   `json:"error" example:"Bad json in request"`
+	Fields []string `json:"fields" example:"email:required"`
+}
+
 type ValidationError struct {
 	Fields []string
 }
@@ -49,16 +55,26 @@ func (e *ValidationError) StatusCode() int {
 	return http.StatusBadRequest
 }
 
-type ValidationErrorDTO struct {
+// @Description Uniqueness error
+type validationDTOErrorResponse struct {
+	Error string `json:"error" example:"A user with the nickname Johny1 already exists"`
+}
+
+type ValidationDTOError struct {
 	Err error
 }
 
-func (e *ValidationErrorDTO) Error() string {
+func (e *ValidationDTOError) Error() string {
 	return e.Err.Error()
 }
 
-func (e *ValidationErrorDTO) StatusCode() int {
+func (e *ValidationDTOError) StatusCode() int {
 	return http.StatusConflict
+}
+
+// @Description Internal server error
+type internalServerErrorResponse struct {
+	Error string `json:"error" example:"Internal server error"`
 }
 
 func ErrorsHandler(log logger) echo.HTTPErrorHandler {
