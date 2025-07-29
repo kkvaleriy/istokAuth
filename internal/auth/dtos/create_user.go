@@ -12,7 +12,7 @@ type CreateUserRequest struct {
 	Lastname string `json:"lastname" example:"Doe" validate:"required"`
 	Nickname string `json:"nickname" example:"Johny1" validate:"required"`
 	Email    string `json:"email" example:"john@email.com" validate:"required,email"`
-	Phone    int    `json:"phone" example:"79990001122" validate:"required,len=11"`
+	Phone    int    `json:"phone" example:"79990001122" validate:"required"`
 	Password string `json:"password" example:"mySuperPass" validate:"required,min=8"`
 }
 
