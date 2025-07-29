@@ -47,15 +47,21 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Bad json in request",
+                        "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/v1.validationErrorResponse"
+                            "$ref": "#/definitions/v1.badRequestErrorResponse"
                         }
                     },
                     "409": {
                         "description": "A user already exists",
                         "schema": {
                             "$ref": "#/definitions/v1.validationDTOErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Bad json in request",
+                        "schema": {
+                            "$ref": "#/definitions/v1.validationErrorResponse"
                         }
                     },
                     "500": {
@@ -123,6 +129,16 @@ const docTemplate = `{
                 "uuid": {
                     "type": "string",
                     "example": "16763be4-6022-406e-a950-fcd5018633ca"
+                }
+            }
+        },
+        "v1.badRequestErrorResponse": {
+            "description": "Bad request",
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "Bad request"
                 }
             }
         },
