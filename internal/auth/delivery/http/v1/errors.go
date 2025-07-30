@@ -26,7 +26,7 @@ func (e *BadRequestError) Error() string {
 	return fmt.Sprintf("Bad request: %s", e.Err.Error())
 }
 
-func (e *BadRequestError) StatusCode() int {
+func (e *BadRequestError) Code() int {
 	return http.StatusBadRequest
 }
 
@@ -56,7 +56,7 @@ func (e *ValidationError) Error() string {
 	return "validation failed"
 }
 
-func (e *ValidationError) StatusCode() int {
+func (e *ValidationError) Code() int {
 	return http.StatusUnprocessableEntity
 }
 
@@ -73,7 +73,7 @@ func (e *ValidationDTOError) Error() string {
 	return e.Err.Error()
 }
 
-func (e *ValidationDTOError) StatusCode() int {
+func (e *ValidationDTOError) Code() int {
 	return http.StatusConflict
 }
 
@@ -93,27 +93,25 @@ func ErrorsHandler(log logger) echo.HTTPErrorHandler {
 
 		switch e := err.(type) {
 		case *BadRequestError:
-			status = e.StatusCode()
-			message = map[string]interface{}{
-				"error": e.Error()}
+			status = e.Code()
+			message = &badRequestErrorResponse{Error: e.Error()}
 		case *ValidationError:
-			status = e.StatusCode()
-			message = map[string]interface{}{
-				"error":  e.Error(),
-				"fields": e.Fields,
+			status = e.Code()
+			message = &validationErrorResponse{
+				Error:  e.Error(),
+				Fields: e.Fields,
 			}
 		case *ValidationDTOError:
-			status = e.StatusCode()
-			message = map[string]interface{}{
-				"error": e.Error()}
+			status = e.Code()
+			message = &validationDTOErrorResponse{
+				Error: e.Error(),
+			}
 		case *echo.HTTPError:
 			status = e.Code
-			message = map[string]interface{}{
-				"error": e.Error()}
+			message = e
 		default:
 			status = http.StatusInternalServerError
-			message = map[string]interface{}{
-				"error": "Internal server error"}
+			message = &internalServerErrorResponse{Error: "Internal Server Error"}
 		}
 
 		log.Error("request error", "error", err.Error(), "status", status)
