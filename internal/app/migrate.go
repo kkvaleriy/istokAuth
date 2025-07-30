@@ -32,7 +32,7 @@ func init() {
 
 	for currentAttempt < attempts {
 		m, err = migrate.New("file://migrations", dbURL)
-		if err != nil {
+		if err == nil {
 			break
 		}
 
