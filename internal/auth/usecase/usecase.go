@@ -21,12 +21,12 @@ type Repository interface {
 	AddUser(ctx context.Context, u *user.User) error
 }
 
-type usecase struct {
+type userService struct {
 	repository Repository
 	log        logger
 }
 
-func New(repository Repository, log logger) *usecase {
-	return &usecase{repository: repository,
+func New(repository Repository, log logger) *userService {
+	return &userService{repository: repository,
 		log: log}
 }

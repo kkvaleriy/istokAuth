@@ -7,7 +7,7 @@ import (
 	user "github.com/kkvaleriy/istokAuth/internal/auth/entities"
 )
 
-func (uc *usecase) SignUp(ctx context.Context, request *dtos.CreateUserRequest) (*dtos.CreateUserResponse, error) {
+func (uc *userService) SignUp(ctx context.Context, request *dtos.CreateUserRequest) (*dtos.CreateUserResponse, error) {
 	userForCreate, err := user.UserForSignUp(request)
 	if err != nil {
 		return nil, err
