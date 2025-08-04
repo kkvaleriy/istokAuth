@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -63,4 +64,15 @@ func errorValidation(constraint string, args pgx.NamedArgs) *dtos.ValidationErro
 		Field:   field,
 		Value:   value,
 	}
+}
+
+func signInError(reason error) *dtos.SignInError {
+	var msg string
+	if errors.Is(reason, pgx.ErrNoRows) {
+		msg = "Invalid credentials"
+	} else {
+		msg = "Internal error"
+	}
+
+	return &dtos.SignInError{Message: msg, Reason: reason.Error()}
 }
