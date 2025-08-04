@@ -8,7 +8,7 @@ import (
 )
 
 func (uc *userService) SignUp(ctx context.Context, request *dtos.CreateUserRequest) (*dtos.CreateUserResponse, error) {
-	userForCreate, err := user.UserForSignUp(request)
+	userForCreate, err := user.SignUp(request)
 	if err != nil {
 		return nil, err
 	}
