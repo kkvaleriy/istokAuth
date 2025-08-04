@@ -62,10 +62,7 @@ func (r *repository) CheckUserByCredentials(ctx context.Context, u *user.User) (
 
 	err := r.db.QueryRow(ctx, querys.CheckUserByCredentials, args).Scan(&u.UUID, &u.Nickname, &u.UserType, &u.IsActive)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, err // TODO: Create custom error.
-		}
-		return nil, err
+		return nil, signInError(err)
 	}
 
 	return u, nil
