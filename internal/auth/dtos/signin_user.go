@@ -5,3 +5,8 @@ type SignInRequest struct {
 	Phone    int    `json:"phone example:"79991112233""`
 	Password string `json:"password example:"mySuperPass" validate:"required,min=8"`
 }
+
+type SignInResponse struct {
+	JWT    string `json:"jwt"`
+	RToken string
+}

@@ -75,3 +75,15 @@ func SignIn(dto *dtos.SignInRequest) (*User, error) {
 	}
 	return &User{Email: dto.Email, Phone: dto.Phone, PassHash: sha256.Sum256([]byte(dto.Password))}, nil
 }
+
+func (u *User) RefreshToken(ttl time.Duration) *RToken {
+	issuedAt := time.Now().Unix()
+	expiresAt := time.Unix(issuedAt, 0).Add(ttl).Unix()
+	return &RToken{
+		UUID:      uuid.New(),
+		UserUUID:  u.UUID,
+		Nickname:  u.Nickname,
+		CreatedAt: issuedAt,
+		ExpiresAt: expiresAt,
+	}
+}

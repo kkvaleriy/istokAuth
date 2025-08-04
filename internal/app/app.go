@@ -61,7 +61,7 @@ func (app *app) Run() error {
 	})
 
 	pg := postgres.New(app.db, app.log)
-	uc := usecase.New(pg, app.log)
+	uc := usecase.NewUserService(pg, app.log)
 	ht := v1.NewHandler(uc, app.log)
 
 	ht.Routes(domain)
