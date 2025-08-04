@@ -40,7 +40,7 @@ func (r *repository) AddUser(ctx context.Context, u *user.User) error {
 	if err != nil {
 
 		if pgErr, ok := err.(*pgconn.PgError); ok && pgErr.Code == "23505" {
-			return ErrorValidation(pgErr.ConstraintName, args)
+			return errorValidation(pgErr.ConstraintName, args)
 		}
 		return err
 	}

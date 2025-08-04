@@ -33,7 +33,7 @@ func checkUserByCredentialsArgs(u *user.User) pgx.NamedArgs {
 	}
 }
 
-func ErrorValidation(constraint string, args pgx.NamedArgs) *dtos.ValidationError {
+func errorValidation(constraint string, args pgx.NamedArgs) *dtos.ValidationError {
 	var field, value string
 
 	switch strings.ToLower(constraint) {
