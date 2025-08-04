@@ -10,3 +10,12 @@ type SignInResponse struct {
 	JWT    string `json:"jwt"`
 	RToken string
 }
+
+type SignInError struct {
+	Message string
+	Reason  string
+}
+
+func (s *SignInError) Error() string {
+	return s.Message
+}
