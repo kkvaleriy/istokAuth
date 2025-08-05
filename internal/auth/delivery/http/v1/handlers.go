@@ -72,3 +72,42 @@ func (h *handler) signUp(c echo.Context) error {
 
 	return c.JSON(http.StatusCreated, response)
 }
+
+// @Summary User authorization
+// @Tags Authorization
+// @Description User authorization
+// @Accept json
+// @Produce json
+// @Param input body dtos.SignInRequest true "Account information for signup"
+// @Success 200 {object} dtos.SignInResponse "Json with JWT, refresh token in coockie"
+// @Failure 400 {object} badRequestErrorResponse "Bad request"
+// @Failure 409 {object} validationDTOErrorResponse "Invalid credentials"
+// @Failure 422 {object} validationErrorResponse "Bad json in request"
+// @Failure 500 {object} internalServerErrorResponse "Internal server error"
+// @Router /auth/signin [get]
+func (h *handler) signIn(c echo.Context) error {
+	request := &dtos.SignInRequest{}
+
+	if err := c.Bind(request); err != nil {
+		return &BadRequestError{Err: err}
+	}
+
+	h.log.Debug("request for signin", "host", c.Request().Host, "URL", c.Request().URL, "request", request)
+
+	validate := validator.New()
+	err := validate.Struct(request)
+	if err != nil {
+		return ErrValidation(err)
+	}
+
+	response, err := h.usecase.SignIn(c.Request().Context(), request)
+	if err != nil {
+		var validationError *dtos.SignInError
+		if errors.As(err, validationError) {
+			return &ValidationDTOError{Err: validationError}
+		}
+		return err
+	}
+
+	return c.JSON(http.StatusOK, response)
+}
