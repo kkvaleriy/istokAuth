@@ -10,6 +10,7 @@ import (
 
 type Authentificator interface {
 	SignUp(ctx context.Context, request *dtos.CreateUserRequest) (*dtos.CreateUserResponse, error)
+	SignIn(ctx context.Context, request *dtos.SignInRequest) (*dtos.SignInResponse, error)
 }
 
 type logger interface {
