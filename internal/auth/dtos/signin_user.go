@@ -1,5 +1,7 @@
 package dtos
 
+import "time"
+
 // @Description User credentials.
 type SignInRequest struct {
 	Email    string `json:"email" example:"john@email.com" validate:"email"`
@@ -9,8 +11,9 @@ type SignInRequest struct {
 
 // @Description JWT.
 type SignInResponse struct {
-	JWT    string `json:"jwt"`
-	RToken string
+	JWT           string `json:"jwt"`
+	RToken        string
+	ExpiresRToken time.Time
 }
 
 type SignInError struct {
