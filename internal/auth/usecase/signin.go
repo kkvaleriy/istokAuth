@@ -37,7 +37,8 @@ func (uc *userService) SignIn(ctx context.Context, request *dtos.SignInRequest) 
 		return nil, err
 	}
 
-	return &dtos.SignInResponse{JWT: jwtToken, RToken: rToken.UUID.String()}, nil
+	return &dtos.SignInResponse{JWT: jwtToken, RToken: rToken.UUID.String(),
+		ExpiresRToken: time.Unix(rToken.ExpiresAt, 0)}, nil
 }
 
 func (uc *userService) GenerateJWT(u *user.User) (string, error) {
