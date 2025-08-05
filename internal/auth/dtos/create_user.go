@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
-// @Description User account information for registration
+// @Description User account information for registration.
 type CreateUserRequest struct {
 	Name     string `json:"name" example:"John" validate:"required"`
 	Lastname string `json:"lastname" example:"Doe" validate:"required"`
@@ -16,7 +16,7 @@ type CreateUserRequest struct {
 	Password string `json:"password" example:"mySuperPass" validate:"required,min=8"`
 }
 
-// @Description Information about the user's account after successful registration
+// @Description Information about the user's account after successful registration.
 type CreateUserResponse struct {
 	UUID      uuid.UUID `json:"uuid" example:"16763be4-6022-406e-a950-fcd5018633ca"`
 	UserType  string    `json:"user_type" example:"USER"`
