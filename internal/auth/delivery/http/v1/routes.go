@@ -7,9 +7,9 @@ import (
 )
 
 func (h *handler) Routes(domain *echo.Group) {
-
 	// Swagger endpoint
 	domain.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	domain.POST("/signup", h.signUp)
+	auth := domain.Group("/auth")
+	auth.POST("/signup", h.signUp)
 }
