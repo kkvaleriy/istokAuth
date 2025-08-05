@@ -43,6 +43,25 @@ definitions:
         example: 16763be4-6022-406e-a950-fcd5018633ca
         type: string
     type: object
+  dtos.SignInRequest:
+    description: User credentials.
+    properties:
+      email:
+        example: john@email.com
+        type: string
+      'password example:':
+        type: string
+      'phone example:':
+        type: integer
+    type: object
+  dtos.SignInResponse:
+    description: JWT.
+    properties:
+      jwt:
+        type: string
+      rtoken:
+        type: string
+    type: object
   v1.badRequestErrorResponse:
     description: Bad request
     properties:
@@ -84,7 +103,45 @@ info:
   title: IstokAuth
   version: 1.0.0
 paths:
-  /signup:
+  /auth/signin:
+    get:
+      consumes:
+      - application/json
+      description: User authorization
+      parameters:
+      - description: Account information for signup
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.SignInRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Json with JWT, refresh token in coockie
+          schema:
+            $ref: '#/definitions/dtos.SignInResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/v1.badRequestErrorResponse'
+        "409":
+          description: Invalid credentials
+          schema:
+            $ref: '#/definitions/v1.validationDTOErrorResponse'
+        "422":
+          description: Bad json in request
+          schema:
+            $ref: '#/definitions/v1.validationErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/v1.internalServerErrorResponse'
+      summary: User authorization
+      tags:
+      - Authorization
+  /auth/signup:
     post:
       consumes:
       - application/json

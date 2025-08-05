@@ -9,7 +9,65 @@
     "host": "localhost:8080",
     "basePath": "/api/v1",
     "paths": {
-        "/signup": {
+        "/auth/signin": {
+            "get": {
+                "description": "User authorization",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authorization"
+                ],
+                "summary": "User authorization",
+                "parameters": [
+                    {
+                        "description": "Account information for signup",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.SignInRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Json with JWT, refresh token in coockie",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.SignInResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/v1.badRequestErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "Invalid credentials",
+                        "schema": {
+                            "$ref": "#/definitions/v1.validationDTOErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Bad json in request",
+                        "schema": {
+                            "$ref": "#/definitions/v1.validationErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/v1.internalServerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/signup": {
             "post": {
                 "description": "Registering a new user",
                 "consumes": [
@@ -123,6 +181,34 @@
                 "uuid": {
                     "type": "string",
                     "example": "16763be4-6022-406e-a950-fcd5018633ca"
+                }
+            }
+        },
+        "dtos.SignInRequest": {
+            "description": "User credentials.",
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "john@email.com"
+                },
+                "password example:": {
+                    "type": "string"
+                },
+                "phone example:": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dtos.SignInResponse": {
+            "description": "JWT.",
+            "type": "object",
+            "properties": {
+                "jwt": {
+                    "type": "string"
+                },
+                "rtoken": {
+                    "type": "string"
                 }
             }
         },
