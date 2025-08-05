@@ -34,6 +34,16 @@ func checkUserByCredentialsArgs(u *user.User) pgx.NamedArgs {
 	}
 }
 
+func addTokenArgs(t *user.RToken) pgx.NamedArgs {
+	return pgx.NamedArgs{
+		"UUID":      t.UUID,
+		"userUUID":  t.UserUUID,
+		"nickname":  t.Nickname,
+		"createdAt": t.CreatedAt,
+		"expiresAt": t.ExpiresAt,
+	}
+}
+
 func errorValidation(constraint string, args pgx.NamedArgs) *dtos.ValidationError {
 	var field, value string
 
