@@ -44,6 +44,14 @@ func (r *repository) CheckUserByCredentials(ctx context.Context, u *user.User) (
 	return u, nil
 }
 
+func (r *repository) AddToken(ctx context.Context, t *user.RToken) error {
+	args := addTokenArgs(t)
+	r.log.Debug("the args for query have been created", "args", args)
+
+	return r.insertInDB(ctx, querys.AddRToken, args)
+
+}
+
 func (r *repository) insertInDB(ctx context.Context, query string, args pgx.NamedArgs) error {
 	tx, err := r.db.Begin(ctx)
 	if err != nil {
