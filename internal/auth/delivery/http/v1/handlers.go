@@ -47,12 +47,6 @@ func (h *handler) signUp(c echo.Context) error {
 	request := &dtos.CreateUserRequest{}
 
 	if err := c.Bind(request); err != nil {
-		body := []byte{}
-
-		c.Request().Body.Read(body)
-		defer c.Request().Body.Close()
-		h.log.Error("can't parse json in request", "host", c.Request().Host, "URL", c.Request().URL, "body", body, "error", err)
-
 		return &BadRequestError{Err: err}
 	}
 
