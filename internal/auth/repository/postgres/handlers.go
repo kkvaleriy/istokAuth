@@ -29,6 +29,10 @@ func (r *repository) AddUser(ctx context.Context, u *user.User) error {
 	args := createUserArgs(u)
 	r.log.Debug("the args for query have been created", "args", args)
 
+	return r.insertInDB(ctx, querys.AddUser, args)
+}
+
+func (r *repository) insertInDB(ctx context.Context, query string, args pgx.NamedArgs) error {
 	tx, err := r.db.Begin(ctx)
 	if err != nil {
 		return err
@@ -36,35 +40,22 @@ func (r *repository) AddUser(ctx context.Context, u *user.User) error {
 	defer tx.Rollback(ctx)
 	r.log.Debug("the transaction has started")
 
-	_, err = tx.Exec(ctx, querys.AddUser, args)
+	_, err = tx.Exec(ctx, query, args)
 	if err != nil {
-
+		r.log.Debug("the transaction was failed, rollback")
 		if pgErr, ok := err.(*pgconn.PgError); ok && pgErr.Code == "23505" {
 			return errorValidation(pgErr.ConstraintName, args)
 		}
 		return err
 	}
 
-	r.log.Debug("the request was successful", "query", querys.AddUser, "args", args)
+	r.log.Debug("the request was successful", "query", query, "args", args)
 
 	err = tx.Commit(ctx)
 	if err != nil {
 		return err
 	}
-
-	r.log.Debug("the transaction has finished")
+	r.log.Debug("the transaction has finished successfuly")
 
 	return nil
 }
-
-func (r *repository) CheckUserByCredentials(ctx context.Context, u *user.User) (*user.User, error) {
-	args := checkUserByCredentialsArgs(u)
-
-	err := r.db.QueryRow(ctx, querys.CheckUserByCredentials, args).Scan(&u.UUID, &u.Nickname, &u.UserType, &u.IsActive)
-	if err != nil {
-		return nil, signInError(err)
-	}
-
-	return u, nil
-}
-
