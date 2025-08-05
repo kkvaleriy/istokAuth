@@ -109,5 +109,14 @@ func (h *handler) signIn(c echo.Context) error {
 		return err
 	}
 
+	coockie := &http.Cookie{
+		Name:     "refreshToken",
+		Value:    response.RToken,
+		Expires:  response.ExpiresRToken,
+		Path:     "/api/v1/auth",
+		HttpOnly: true,
+	}
+
+	c.SetCookie(coockie)
 	return c.JSON(http.StatusOK, response)
 }
