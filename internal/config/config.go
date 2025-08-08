@@ -12,22 +12,22 @@ import (
 const defConfigPath = "../configs/config.yaml"
 
 type server struct {
-	Port int `env:"ISTOK_AUTH_SERVER_PORT"`
+	Port int `env:"ISTOK_AUTH_SERVER_PORT" env-required`
 }
 
 type logger struct {
-	Level string `env:"ISTOK_AUTH_LOG_LVL"`
+	Level string `env:"ISTOK_AUTH_LOG_LVL" env-default:"INFO"`
 }
 
 type dataSource struct {
-	Host               string `env:"ISTOK_AUTH_DB_HOST"`
-	Port               int    `env:"ISTOK_AUTH_DB_PORT"`
-	Name               string `env:"ISTOK_AUTH_DB_NAME"`
-	MaxConnection      int    `env:"ISTOK_AUTH_DB_MAX_CONN"`
-	MinConnection      int    `env:"ISTOK_AUTH_DB_MIN_CONN"`
-	ConnectionLifeTime string `env:"ISTOK_AUTH_DB_CONN_LIFETIME"`
-	User               string `env:"ISTOK_AUTH_DB_USER"`
-	Password           string `env:"ISTOK_AUTH_DB_PASSWORD"`
+	Host               string `env:"ISTOK_AUTH_DB_HOST" env-required`
+	Port               int    `env:"ISTOK_AUTH_DB_PORT" env-required`
+	Name               string `env:"ISTOK_AUTH_DB_NAME" env-required`
+	MaxConnection      int    `env:"ISTOK_AUTH_DB_MAX_CONN" env-default:"20"`
+	MinConnection      int    `env:"ISTOK_AUTH_DB_MIN_CONN" env-default:"5"`
+	ConnectionLifeTime string `env:"ISTOK_AUTH_DB_CONN_LIFETIME" env-default:"1h"`
+	User               string `env:"ISTOK_AUTH_DB_USER" env-required`
+	Password           string `env:"ISTOK_AUTH_DB_PASSWORD" env-required`
 }
 
 type Config struct {
