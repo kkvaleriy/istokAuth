@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"gopkg.in/yaml.v3"
+	"github.com/ilyakaznacheev/cleanenv"
 )
 
 const defConfigPath = "../configs/config.yaml"
@@ -38,27 +38,11 @@ type Config struct {
 }
 
 func New() *Config {
-
-	cfgFilePath := os.Getenv("ISTOK_AUTHORIZATION_CONFIG_PATH")
-	if len(cfgFilePath) < 2 {
-		cfgFilePath = defConfigPath
-		log.Printf("config file's path not set in env: path=%s", cfgFilePath)
-	}
-
-	file, err := os.ReadFile(cfgFilePath)
-	if err != nil {
-		log.Fatalf("can't read config file: error=%s", err.Error())
-	}
-
 	cfg := &Config{}
-	cfg.DataSource.User = os.Getenv("DB_USER")
-	cfg.DataSource.Password = os.Getenv("DB_PASSWORD")
-
-	err = yaml.Unmarshal(file, cfg)
+	err := cleanenv.ReadEnv(cfg)
 	if err != nil {
-		log.Printf("can't parse yaml file: error=%s", err.Error())
+		log.Fatalf("error reading configuration from virtual environment (env): %s", err.Error())
 	}
-
 	return cfg
 }
 
