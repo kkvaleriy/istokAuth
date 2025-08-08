@@ -9,6 +9,12 @@ import (
 	"github.com/ilyakaznacheev/cleanenv"
 )
 
+type token struct {
+	Secret    string `env:"ISTOK_AUTH_TOKEN_SECRET" env-required`
+	RTokenTTL string `env:"ISTOK_AUTH_TOKEN_REFRESH_TTL" env-default:"5m"`
+	ATokenTTL string `env:"ISTOK_AUTH_TOKEN_ACCESS_TTL" env-default:"1M"`
+}
+
 type server struct {
 	Port int `env:"ISTOK_AUTH_SERVER_PORT" env-required`
 }
