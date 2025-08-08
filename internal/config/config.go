@@ -43,10 +43,12 @@ type Config struct {
 
 func New() *Config {
 	cfg := &Config{}
+
 	err := cleanenv.ReadEnv(cfg)
 	if err != nil {
-		log.Fatalf("error reading configuration from virtual environment (env): %s", err.Error())
+		log.Panicf("error reading configuration from virtual environment (env): %s", err.Error())
 	}
+
 	return cfg
 }
 
@@ -54,26 +56,32 @@ func (s server) ServerPort() string {
 	defPort := ":8080"
 	if s.Port < 1024 || s.Port > 65535 {
 		log.Printf("invalid port value=%v, will use the default value=%s", s.Port, defPort)
+
 		return defPort
 	}
+
 	return fmt.Sprintf(":%s", strconv.Itoa(s.Port))
 }
 
 func (d dataSource) MaxConns() int32 {
 	defMaxConns := 5
 	if d.MaxConnection < 1 {
-		log.Printf("invalid max conns value=%s, will use the default value=%s", d.MaxConnection, defMaxConns)
+		log.Printf("invalid max conns value=%v, will use the default value=%v", d.MaxConnection, defMaxConns)
+
 		return int32(defMaxConns)
 	}
+
 	return int32(d.MaxConnection)
 }
 
 func (d dataSource) MinConns() int32 {
 	defMinConns := 1
 	if d.MinConnection > d.MaxConnection {
-		log.Printf("invalid min conns value=%s cannot be greater than the max conns value=%s, will use the default value=%s", d.MinConnection, d.MaxConnection, defMinConns)
+		log.Printf("invalid min conns value=%v cannot be greater than the max conns value=%v, will use the default value=%v", d.MinConnection, d.MaxConnection, defMinConns)
+
 		return int32(defMinConns)
 	}
+
 	return int32(d.MinConnection)
 }
 
@@ -82,8 +90,10 @@ func (d dataSource) LifeTime() time.Duration {
 	lifeTime, err := time.ParseDuration(d.ConnectionLifeTime)
 	if err != nil {
 		log.Printf("invalid connection life time value=%s, will use the default value=%s", d.ConnectionLifeTime, defLifeTime.String())
+
 		return defLifeTime
 	}
+
 	return lifeTime
 }
 
@@ -103,20 +113,26 @@ func (t token) SecretKey() string {
 
 func (t token) RefreshTTL() time.Duration {
 	defTTL := time.Hour
+
 	ttl, err := time.ParseDuration(t.RTokenTTL)
 	if err != nil {
 		log.Printf("invalid parameter of the refresh token ttl %s, will use the default value=%s", t.RTokenTTL, defTTL.String())
+
 		return defTTL
 	}
+
 	return ttl
 }
 
 func (t token) AccessTTL() time.Duration {
 	defTTL := time.Minute * 5
+
 	ttl, err := time.ParseDuration(t.ATokenTTL)
 	if err != nil {
 		log.Printf("invalid parameter of the access token ttl %s, will use the default value=%s", t.ATokenTTL, defTTL.String())
+
 		return defTTL
 	}
+
 	return ttl
 }
