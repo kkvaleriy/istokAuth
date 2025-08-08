@@ -6,6 +6,7 @@ import (
 	"os/signal"
 	"sync"
 	"syscall"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	v1 "github.com/kkvaleriy/istokAuth/internal/auth/delivery/http/v1"
@@ -26,22 +27,30 @@ type serverCfg interface {
 	ServerPort() string
 }
 
+type tokenParams interface {
+	SecretKey() string
+	RefreshTTL() time.Duration
+	AccessTTL() time.Duration
+}
+
 type server struct {
 	echo *echo.Echo
 	cfg  serverCfg
 }
 
 type app struct {
-	db     *pgxpool.Pool
-	server *server
-	log    logger
+	db          *pgxpool.Pool
+	server      *server
+	tokenParams tokenParams
+	log         logger
 }
 
-func New(db *pgxpool.Pool, e *echo.Echo, sCfg serverCfg, log logger) *app {
+func New(db *pgxpool.Pool, e *echo.Echo, tParams tokenParams, sCfg serverCfg, log logger) *app {
 	return &app{
-		db:     db,
-		server: &server{echo: e, cfg: sCfg},
-		log:    log,
+		db:          db,
+		server:      &server{echo: e, cfg: sCfg},
+		tokenParams: tParams,
+		log:         log,
 	}
 }
 
@@ -61,7 +70,7 @@ func (app *app) Run() error {
 	})
 
 	pg := postgres.New(app.db, app.log)
-	uc := usecase.NewUserService(pg, app.log)
+	uc := usecase.NewUserService(app.tokenParams, pg, app.log)
 	ht := v1.NewHandler(uc, app.log)
 
 	ht.Routes(domain)
