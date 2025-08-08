@@ -78,12 +78,13 @@ func (d dataSource) MinConns() int32 {
 }
 
 func (d dataSource) LifeTime() time.Duration {
-	t, err := time.ParseDuration(d.ConnectionLifeTime)
+	defLifeTime := time.Hour
+	lifeTime, err := time.ParseDuration(d.ConnectionLifeTime)
 	if err != nil {
-		log.Printf("invalid connection life time value=%s, will use the default value=%s", d.ConnectionLifeTime, "1h")
-		return time.Hour
+		log.Printf("invalid connection life time value=%s, will use the default value=%s", d.ConnectionLifeTime, defLifeTime.String())
+		return defLifeTime
 	}
-	return t
+	return lifeTime
 }
 
 func (d dataSource) PostgresConnString() string {
