@@ -77,3 +77,8 @@ func (d dataSource) PostgresConnString() string {
 
 	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s", d.User, d.Password, d.Host, port, d.Name)
 }
+
+func (t token) SecretKey() string {
+	return t.Secret
+}
+
