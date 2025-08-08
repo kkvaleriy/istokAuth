@@ -82,3 +82,13 @@ func (t token) SecretKey() string {
 	return t.Secret
 }
 
+func (t token) RefreshTTL() time.Duration {
+	defTTL := time.Hour
+	ttl, err := time.ParseDuration(t.RTokenTTL)
+	if err != nil {
+		log.Printf("invalid parameter of the refresh token ttl %s, will use the default value=%s", t.RTokenTTL, defTTL.String())
+		return defTTL
+	}
+	return ttl
+}
+
