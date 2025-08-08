@@ -13,28 +13,28 @@ import (
 const defConfigPath = "../configs/config.yaml"
 
 type server struct {
-	Port int `yaml:"port"`
+	Port int `env:"ISTOK_AUTH_SERVER_PORT"`
 }
 
 type logger struct {
-	Level string `yaml:"level"`
+	Level string `env:"ISTOK_AUTH_LOG_LVL"`
 }
 
 type dataSource struct {
-	Host               string `yaml:"host"`
-	Port               int    `yaml:"port"`
-	DB                 string `yaml:"db"`
-	MaxConnection      int    `yaml:"max_connection"`
-	MinConnection      int    `yaml:"min_connection"`
-	ConnectionLifeTime string `yaml:"connection_life_time"`
-	User               string
-	Password           string
+	Host               string `env:"ISTOK_AUTH_DB_HOST"`
+	Port               int    `env:"ISTOK_AUTH_DB_PORT"`
+	Name               string `env:"ISTOK_AUTH_DB_NAME"`
+	MaxConnection      int    `env:"ISTOK_AUTH_DB_MAX_CONN"`
+	MinConnection      int    `env:"ISTOK_AUTH_DB_MIN_CONN"`
+	ConnectionLifeTime string `env:"ISTOK_AUTH_DB_CONN_LIFETIME"`
+	User               string `env:"ISTOK_AUTH_DB_USER"`
+	Password           string `env:"ISTOK_AUTH_DB_PASSWORD"`
 }
 
 type Config struct {
-	Server     server     `yaml:"server"`
-	DataSource dataSource `yaml:"data_source"`
-	Logger     logger     `yaml:"logger"`
+	Server     server
+	DataSource dataSource
+	Logger     logger
 }
 
 func New() *Config {
