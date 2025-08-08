@@ -26,6 +26,12 @@ type Repository interface {
 	AddToken(ctx context.Context, t *user.RToken) error
 }
 
+type tokenParams interface {
+	SecretKey() string
+	RefreshTTL() time.Duration
+	AccessTTL() time.Duration
+}
+
 type userService struct {
 	secret     string
 	jwtTTL     time.Duration
