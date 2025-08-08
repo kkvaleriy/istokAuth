@@ -68,6 +68,14 @@ func (d dataSource) MaxConns() int32 {
 	return int32(d.MaxConnection)
 }
 
+func (d dataSource) MinConns() int32 {
+	defMinConns := 1
+	if d.MinConnection > d.MaxConnection {
+		log.Printf("invalid min conns value=%s cannot be greater than the max conns value=%s, will use the default value=%s", d.MinConnection, d.MaxConnection, defMinConns)
+		return int32(defMinConns)
+	}
+	return int32(d.MinConnection)
+}
 
 func (d dataSource) LifeTime() time.Duration {
 	t, err := time.ParseDuration(d.ConnectionLifeTime)
