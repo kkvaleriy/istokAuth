@@ -30,7 +30,7 @@ func (uc *userService) SignIn(ctx context.Context, request *dtos.SignInRequest) 
 		return nil, fmt.Errorf("Internal error")
 	}
 
-	rToken := u.RefreshToken(uc.token.RefreshTTL())
+	rToken := u.RefreshToken(uc.token.RefreshTTL)
 
 	err = uc.repository.AddToken(ctx, rToken)
 	if err != nil {
@@ -43,7 +43,7 @@ func (uc *userService) SignIn(ctx context.Context, request *dtos.SignInRequest) 
 
 func (uc *userService) GenerateJWT(u *user.User) (string, error) {
 	issuedAt := time.Now().Unix()
-	expiresAt := time.Unix(issuedAt, 0).Add(uc.token.AccessTTL()).Unix()
+	expiresAt := time.Unix(issuedAt, 0).Add(uc.token.AccessTTL).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"iss":  "IstokAuth",
 		"sub":  u.UUID,
@@ -53,5 +53,5 @@ func (uc *userService) GenerateJWT(u *user.User) (string, error) {
 		"nbf":  issuedAt,
 	})
 
-	return token.SignedString(uc.token.SecretKey())
+	return token.SignedString(uc.token.Secret)
 }

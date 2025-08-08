@@ -26,20 +26,30 @@ type Repository interface {
 	AddToken(ctx context.Context, t *user.RToken) error
 }
 
-type tokenParams interface {
+type tokenConfigurator interface {
 	SecretKey() string
 	RefreshTTL() time.Duration
 	AccessTTL() time.Duration
 }
 
+type tokenConfig struct {
+	Secret     string
+	RefreshTTL time.Duration
+	AccessTTL  time.Duration
+}
+
 type userService struct {
 	repository Repository
-	token      tokenParams
+	token      *tokenConfig
 	log        logger
 }
 
-func NewUserService(tParams tokenParams, repository Repository, log logger) *userService {
+func NewUserService(tParams tokenConfigurator, repository Repository, log logger) *userService {
 	return &userService{repository: repository,
-		token: tParams,
-		log:   log}
+		token: &tokenConfig{
+			Secret:     tParams.SecretKey(),
+			RefreshTTL: tParams.RefreshTTL(),
+			AccessTTL:  tParams.AccessTTL(),
+		},
+		log: log}
 }
