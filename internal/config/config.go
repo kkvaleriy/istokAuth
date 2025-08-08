@@ -70,5 +70,5 @@ func (d dataSource) PostgresConnString() string {
 		log.Printf("invalid postgres port value=%v, will use the default value=%s", d.Port, port)
 	}
 
-	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s", d.User, d.Password, d.Host, port, d.DB)
+	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s", d.User, d.Password, d.Host, port, d.Name)
 }
