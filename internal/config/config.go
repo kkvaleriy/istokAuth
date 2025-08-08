@@ -59,6 +59,16 @@ func (s server) ServerPort() string {
 	return fmt.Sprintf(":%s", strconv.Itoa(s.Port))
 }
 
+func (d dataSource) MaxConns() int32 {
+	defMaxConns := 5
+	if d.MaxConnection < 1 {
+		log.Printf("invalid max conns value=%s, will use the default value=%s", d.MaxConnection, defMaxConns)
+		return int32(defMaxConns)
+	}
+	return int32(d.MaxConnection)
+}
+
+
 func (d dataSource) LifeTime() time.Duration {
 	t, err := time.ParseDuration(d.ConnectionLifeTime)
 	if err != nil {
