@@ -45,13 +45,13 @@ func New() *Config {
 	return cfg
 }
 
-func (c Config) ServerPort() string {
+func (s server) ServerPort() string {
 	defPort := ":8080"
-	if c.Server.Port < 1024 || c.Server.Port > 65535 {
-		log.Printf("invalid port value=%v, will use the default value=%s", c.Server.Port, defPort)
+	if s.Port < 1024 || s.Port > 65535 {
+		log.Printf("invalid port value=%v, will use the default value=%s", s.Port, defPort)
 		return defPort
 	}
-	return fmt.Sprintf(":%s", strconv.Itoa(c.Server.Port))
+	return fmt.Sprintf(":%s", strconv.Itoa(s.Port))
 }
 
 func (d dataSource) LifeTime() time.Duration {
