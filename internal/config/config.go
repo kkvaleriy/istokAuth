@@ -92,3 +92,12 @@ func (t token) RefreshTTL() time.Duration {
 	return ttl
 }
 
+func (t token) AccessTTL() time.Duration {
+	defTTL := time.Minute * 5
+	ttl, err := time.ParseDuration(t.ATokenTTL)
+	if err != nil {
+		log.Printf("invalid parameter of the access token ttl %s, will use the default value=%s", t.ATokenTTL, defTTL.String())
+		return defTTL
+	}
+	return ttl
+}
