@@ -62,7 +62,7 @@ func (s server) ServerPort() string {
 func (d dataSource) LifeTime() time.Duration {
 	t, err := time.ParseDuration(d.ConnectionLifeTime)
 	if err != nil {
-		log.Printf("invalid connection_life_time value=%s, will use the default value=%s", d.ConnectionLifeTime, "1h")
+		log.Printf("invalid connection life time value=%s, will use the default value=%s", d.ConnectionLifeTime, "1h")
 		return time.Hour
 	}
 	return t
