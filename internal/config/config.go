@@ -37,6 +37,7 @@ type dataSource struct {
 type Config struct {
 	Server     server
 	DataSource dataSource
+	Token      token
 	Logger     logger
 }
 
