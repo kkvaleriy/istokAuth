@@ -9,8 +9,6 @@ import (
 	"github.com/ilyakaznacheev/cleanenv"
 )
 
-const defConfigPath = "../configs/config.yaml"
-
 type server struct {
 	Port int `env:"ISTOK_AUTH_SERVER_PORT" env-required`
 }
