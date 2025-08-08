@@ -41,6 +41,6 @@ func main() {
 	}
 	log.Info("successful connection to the database")
 
-	app := app.New(db, server, cfg, log)
+	app := app.New(db, server, cfg.Server, log)
 	app.Run()
 }
