@@ -27,8 +27,8 @@ func main() {
 		panic(err)
 	}
 
-	dbConfig.MaxConns = int32(cfg.DataSource.MaxConnection)
-	dbConfig.MinConns = int32(cfg.DataSource.MinConnection)
+	dbConfig.MaxConns = cfg.DataSource.MaxConns()
+	dbConfig.MinConns = cfg.DataSource.MinConns()
 	dbConfig.MaxConnLifetime = cfg.DataSource.LifeTime()
 
 	log.Info("attempting to connect to the database", "connectionString", connString)
