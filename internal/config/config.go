@@ -46,7 +46,7 @@ func New() *Config {
 
 	err := cleanenv.ReadEnv(cfg)
 	if err != nil {
-		log.Panicf("error reading configuration from virtual environment (env): %s", err.Error())
+		log.Fatalf("error reading configuration from virtual environment (env): %s", err.Error())
 	}
 
 	return cfg
