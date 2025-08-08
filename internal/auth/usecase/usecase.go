@@ -33,14 +33,13 @@ type tokenParams interface {
 }
 
 type userService struct {
-	secret     string
-	jwtTTL     time.Duration
-	refreshTTL time.Duration
 	repository Repository
+	token      tokenParams
 	log        logger
 }
 
-func NewUserService(secret string, repository Repository, log logger) *userService {
+func NewUserService(tParams tokenParams, repository Repository, log logger) *userService {
 	return &userService{repository: repository,
-		log: log}
+		token: tParams,
+		log:   log}
 }
