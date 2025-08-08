@@ -10,13 +10,13 @@ import (
 )
 
 type token struct {
-	Secret    string `env:"ISTOK_AUTH_TOKEN_SECRET" env-required`
+	Secret    string `env:"ISTOK_AUTH_TOKEN_SECRET" env-required:"true"`
 	RTokenTTL string `env:"ISTOK_AUTH_TOKEN_REFRESH_TTL" env-default:"5m"`
 	ATokenTTL string `env:"ISTOK_AUTH_TOKEN_ACCESS_TTL" env-default:"1M"`
 }
 
 type server struct {
-	Port int `env:"ISTOK_AUTH_SERVER_PORT" env-required`
+	Port int `env:"ISTOK_AUTH_SERVER_PORT" env-required:"true"`
 }
 
 type logger struct {
@@ -24,14 +24,14 @@ type logger struct {
 }
 
 type dataSource struct {
-	Host               string `env:"ISTOK_AUTH_DB_HOST" env-required`
-	Port               int    `env:"ISTOK_AUTH_DB_PORT" env-required`
-	Name               string `env:"ISTOK_AUTH_DB_NAME" env-required`
+	Host               string `env:"ISTOK_AUTH_DB_HOST" env-required:"true"`
+	Port               int    `env:"ISTOK_AUTH_DB_PORT" env-required:"true"`
+	Name               string `env:"ISTOK_AUTH_DB_NAME" env-required:"true"`
 	MaxConnection      int    `env:"ISTOK_AUTH_DB_MAX_CONN" env-default:"20"`
 	MinConnection      int    `env:"ISTOK_AUTH_DB_MIN_CONN" env-default:"5"`
 	ConnectionLifeTime string `env:"ISTOK_AUTH_DB_CONN_LIFETIME" env-default:"1h"`
-	User               string `env:"ISTOK_AUTH_DB_USER" env-required`
-	Password           string `env:"ISTOK_AUTH_DB_PASSWORD" env-required`
+	User               string `env:"ISTOK_AUTH_DB_USER" env-required:"true"`
+	Password           string `env:"ISTOK_AUTH_DB_PASSWORD" env-required:"true"`
 }
 
 type Config struct {
