@@ -22,8 +22,10 @@ type logger interface {
 
 type Repository interface {
 	AddUser(ctx context.Context, u *user.User) error
+	UpdateUserPassword(ctx context.Context, u *user.User) error
 	CheckUserByCredentials(ctx context.Context, u *user.User) (*user.User, error)
 	AddToken(ctx context.Context, t *user.RToken) error
+	RefreshToken(ctx context.Context, u *user.User, t *user.RToken) (*user.User, error)
 }
 
 type tokenConfigurator interface {
