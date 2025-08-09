@@ -31,7 +31,7 @@ func main() {
 	dbConfig.MinConns = cfg.DataSource.MinConns()
 	dbConfig.MaxConnLifetime = cfg.DataSource.LifeTime()
 
-	log.Info("attempting to connect to the database", "connectionString", connString)
+	log.Debug("attempting to connect to the database", "connectionString", connString)
 	db, err := pgxpool.NewWithConfig(context.Background(), dbConfig)
 	if err != nil {
 		log.Fatal("the attempt to connect to the database failed", "error", err.Error())
