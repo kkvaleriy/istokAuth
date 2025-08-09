@@ -91,6 +91,15 @@ func Empty() *User {
 	return &User{}
 }
 
+func UpdatePassword(dto *dtos.UpdateUserPasswordRequest) (*User, error) {
+	if err := isValidePassword(dto.Password); err != nil {
+		return nil, err
+	}
+	return &User{
+		UUID:     dto.ID.UUID,
+		PassHash: sha256.Sum256([]byte(dto.Password)),
+	}, nil
+}
 
 func isValidePassword(pass string) error {
 	if len(strings.TrimSpace(pass)) < minLenOfPassword {
