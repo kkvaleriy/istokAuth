@@ -60,9 +60,9 @@ func (e *ValidationError) Code() int {
 	return http.StatusUnprocessableEntity
 }
 
-// @Description Uniqueness error
+// @Description Validation error
 type validationDTOErrorResponse struct {
-	Error string `json:"error" example:"A user with the nickname Johny1 already exists"`
+	Error string `json:"error" example:"Some field failed the uniqueness check"`
 }
 
 type ValidationDTOError struct {
@@ -75,6 +75,23 @@ func (e *ValidationDTOError) Error() string {
 
 func (e *ValidationDTOError) Code() int {
 	return http.StatusConflict
+}
+
+type AuthError struct {
+	Err error
+}
+
+func (e *AuthError) Error() string {
+	return e.Err.Error()
+}
+
+func (e *AuthError) Code() int {
+	return http.StatusUnauthorized
+}
+
+// @Description Invalid credentials
+type authErrorResponse struct {
+	Error string `json:"error" example:"Invalid credentials"`
 }
 
 // @Description Internal server error
@@ -106,6 +123,9 @@ func ErrorsHandler(log logger) echo.HTTPErrorHandler {
 			message = &validationDTOErrorResponse{
 				Error: e.Error(),
 			}
+		case *AuthError:
+			status = e.Code()
+			message = &authErrorResponse{Error: e.Error()}
 		case *echo.HTTPError:
 			status = e.Code
 			message = e
