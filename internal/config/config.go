@@ -12,7 +12,7 @@ import (
 type token struct {
 	Secret    string `env:"ISTOK_AUTH_TOKEN_SECRET" env-required:"true"`
 	RTokenTTL string `env:"ISTOK_AUTH_TOKEN_REFRESH_TTL" env-default:"5m"`
-	ATokenTTL string `env:"ISTOK_AUTH_TOKEN_ACCESS_TTL" env-default:"1M"`
+	ATokenTTL string `env:"ISTOK_AUTH_TOKEN_ACCESS_TTL" env-default:"1h"`
 }
 
 type server struct {
