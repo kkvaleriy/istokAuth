@@ -16,6 +16,11 @@ import (
 
 // @host localhost:8080
 // @BasePath /api/v1
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+// @description Enter the token with the `Bearer ` prefix, e.g. "Bearer abcde12345"
 func main() {
 	cfg := config.New()
 	log := logger.New(cfg.Logger.Level)
