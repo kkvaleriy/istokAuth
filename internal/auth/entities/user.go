@@ -87,6 +87,11 @@ func (u *User) RefreshToken(ttl time.Duration) *RToken {
 	}
 }
 
+func Empty() *User {
+	return &User{}
+}
+
+
 func isValidePassword(pass string) error {
 	if len(strings.TrimSpace(pass)) < minLenOfPassword {
 		return fmt.Errorf("the password of user can't be empty or less then %v", minLenOfPassword)
