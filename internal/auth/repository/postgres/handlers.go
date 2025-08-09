@@ -6,6 +6,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/kkvaleriy/istokAuth/internal/auth/dtos"
 	user "github.com/kkvaleriy/istokAuth/internal/auth/entities"
 	"github.com/kkvaleriy/istokAuth/internal/auth/repository/postgres/queries"
 )
