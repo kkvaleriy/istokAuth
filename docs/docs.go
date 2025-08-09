@@ -15,6 +15,44 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth/refresh": {
+            "get": {
+                "description": "Get new refresh and access tokens by refresh token cookie",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Authorization"
+                ],
+                "summary": "Refresh tokens",
+                "responses": {
+                    "200": {
+                        "description": "Json with JWT, refresh token in coockie",
+                        "schema": {
+                            "$ref": "#/definitions/dtos.SignInResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/httperrors.badRequestErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid user",
+                        "schema": {
+                            "$ref": "#/definitions/httperrors.authErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/httperrors.internalServerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/signin": {
             "post": {
                 "description": "User authorization",
@@ -30,7 +68,7 @@ const docTemplate = `{
                 "summary": "User authorization",
                 "parameters": [
                     {
-                        "description": "Account information for signup",
+                        "description": "Account information for signin",
                         "name": "input",
                         "in": "body",
                         "required": true,
@@ -49,25 +87,25 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/v1.badRequestErrorResponse"
+                            "$ref": "#/definitions/httperrors.badRequestErrorResponse"
                         }
                     },
                     "401": {
                         "description": "Invalid credentials",
                         "schema": {
-                            "$ref": "#/definitions/v1.authErrorResponse"
+                            "$ref": "#/definitions/httperrors.authErrorResponse"
                         }
                     },
                     "422": {
                         "description": "Bad json in request",
                         "schema": {
-                            "$ref": "#/definitions/v1.validationErrorResponse"
+                            "$ref": "#/definitions/httperrors.validationErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/v1.internalServerErrorResponse"
+                            "$ref": "#/definitions/httperrors.internalServerErrorResponse"
                         }
                     }
                 }
@@ -107,25 +145,85 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad request",
                         "schema": {
-                            "$ref": "#/definitions/v1.badRequestErrorResponse"
+                            "$ref": "#/definitions/httperrors.badRequestErrorResponse"
                         }
                     },
                     "409": {
                         "description": "A user already exists",
                         "schema": {
-                            "$ref": "#/definitions/v1.validationDTOErrorResponse"
+                            "$ref": "#/definitions/httperrors.validationDTOErrorResponse"
                         }
                     },
                     "422": {
                         "description": "Bad json in request",
                         "schema": {
-                            "$ref": "#/definitions/v1.validationErrorResponse"
+                            "$ref": "#/definitions/httperrors.validationErrorResponse"
                         }
                     },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
-                            "$ref": "#/definitions/v1.internalServerErrorResponse"
+                            "$ref": "#/definitions/httperrors.internalServerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/update-password": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "User update password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "User update password",
+                "parameters": [
+                    {
+                        "description": "New password",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dtos.UpdateUserPasswordRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/httperrors.badRequestErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/httperrors.authErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Bad json in request",
+                        "schema": {
+                            "$ref": "#/definitions/httperrors.validationErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/httperrors.internalServerErrorResponse"
                         }
                     }
                 }
@@ -221,7 +319,21 @@ const docTemplate = `{
                 }
             }
         },
-        "v1.authErrorResponse": {
+        "dtos.UpdateUserPasswordRequest": {
+            "description": "New user password.",
+            "type": "object",
+            "required": [
+                "password"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "example": "mySuperPass"
+                }
+            }
+        },
+        "httperrors.authErrorResponse": {
             "description": "Invalid credentials",
             "type": "object",
             "properties": {
@@ -231,7 +343,7 @@ const docTemplate = `{
                 }
             }
         },
-        "v1.badRequestErrorResponse": {
+        "httperrors.badRequestErrorResponse": {
             "description": "Bad request",
             "type": "object",
             "properties": {
@@ -241,7 +353,7 @@ const docTemplate = `{
                 }
             }
         },
-        "v1.internalServerErrorResponse": {
+        "httperrors.internalServerErrorResponse": {
             "description": "Internal server error",
             "type": "object",
             "properties": {
@@ -251,7 +363,7 @@ const docTemplate = `{
                 }
             }
         },
-        "v1.validationDTOErrorResponse": {
+        "httperrors.validationDTOErrorResponse": {
             "description": "Validation error",
             "type": "object",
             "properties": {
@@ -261,7 +373,7 @@ const docTemplate = `{
                 }
             }
         },
-        "v1.validationErrorResponse": {
+        "httperrors.validationErrorResponse": {
             "description": "JSON validate error",
             "type": "object",
             "properties": {
@@ -279,6 +391,14 @@ const docTemplate = `{
                     ]
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "description": "Enter the token with the ` + "`" + `Bearer ` + "`" + ` prefix, e.g. \"Bearer abcde12345\"",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`

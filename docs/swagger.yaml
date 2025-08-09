@@ -65,35 +65,45 @@ definitions:
       jwt:
         type: string
     type: object
-  v1.authErrorResponse:
+  dtos.UpdateUserPasswordRequest:
+    description: New user password.
+    properties:
+      password:
+        example: mySuperPass
+        minLength: 8
+        type: string
+    required:
+    - password
+    type: object
+  httperrors.authErrorResponse:
     description: Invalid credentials
     properties:
       error:
         example: Invalid credentials
         type: string
     type: object
-  v1.badRequestErrorResponse:
+  httperrors.badRequestErrorResponse:
     description: Bad request
     properties:
       error:
         example: Bad request
         type: string
     type: object
-  v1.internalServerErrorResponse:
+  httperrors.internalServerErrorResponse:
     description: Internal server error
     properties:
       error:
         example: Internal server error
         type: string
     type: object
-  v1.validationDTOErrorResponse:
+  httperrors.validationDTOErrorResponse:
     description: Validation error
     properties:
       error:
         example: Some field failed the uniqueness check
         type: string
     type: object
-  v1.validationErrorResponse:
+  httperrors.validationErrorResponse:
     description: JSON validate error
     properties:
       error:
@@ -113,13 +123,38 @@ info:
   title: IstokAuth
   version: 1.0.0
 paths:
+  /auth/refresh:
+    get:
+      description: Get new refresh and access tokens by refresh token cookie
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Json with JWT, refresh token in coockie
+          schema:
+            $ref: '#/definitions/dtos.SignInResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httperrors.badRequestErrorResponse'
+        "401":
+          description: Invalid user
+          schema:
+            $ref: '#/definitions/httperrors.authErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httperrors.internalServerErrorResponse'
+      summary: Refresh tokens
+      tags:
+      - Authorization
   /auth/signin:
     post:
       consumes:
       - application/json
       description: User authorization
       parameters:
-      - description: Account information for signup
+      - description: Account information for signin
         in: body
         name: input
         required: true
@@ -135,19 +170,19 @@ paths:
         "400":
           description: Bad request
           schema:
-            $ref: '#/definitions/v1.badRequestErrorResponse'
+            $ref: '#/definitions/httperrors.badRequestErrorResponse'
         "401":
           description: Invalid credentials
           schema:
-            $ref: '#/definitions/v1.authErrorResponse'
+            $ref: '#/definitions/httperrors.authErrorResponse'
         "422":
           description: Bad json in request
           schema:
-            $ref: '#/definitions/v1.validationErrorResponse'
+            $ref: '#/definitions/httperrors.validationErrorResponse'
         "500":
           description: Internal server error
           schema:
-            $ref: '#/definitions/v1.internalServerErrorResponse'
+            $ref: '#/definitions/httperrors.internalServerErrorResponse'
       summary: User authorization
       tags:
       - Authorization
@@ -173,20 +208,64 @@ paths:
         "400":
           description: Bad request
           schema:
-            $ref: '#/definitions/v1.badRequestErrorResponse'
+            $ref: '#/definitions/httperrors.badRequestErrorResponse'
         "409":
           description: A user already exists
           schema:
-            $ref: '#/definitions/v1.validationDTOErrorResponse'
+            $ref: '#/definitions/httperrors.validationDTOErrorResponse'
         "422":
           description: Bad json in request
           schema:
-            $ref: '#/definitions/v1.validationErrorResponse'
+            $ref: '#/definitions/httperrors.validationErrorResponse'
         "500":
           description: Internal server error
           schema:
-            $ref: '#/definitions/v1.internalServerErrorResponse'
+            $ref: '#/definitions/httperrors.internalServerErrorResponse'
       summary: Registering a new user
       tags:
       - Authorization
+  /user/update-password:
+    put:
+      consumes:
+      - application/json
+      description: User update password
+      parameters:
+      - description: New password
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.UpdateUserPasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/httperrors.badRequestErrorResponse'
+        "401":
+          description: Invalid token
+          schema:
+            $ref: '#/definitions/httperrors.authErrorResponse'
+        "422":
+          description: Bad json in request
+          schema:
+            $ref: '#/definitions/httperrors.validationErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/httperrors.internalServerErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: User update password
+      tags:
+      - User
+securityDefinitions:
+  BearerAuth:
+    description: Enter the token with the `Bearer ` prefix, e.g. "Bearer abcde12345"
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
