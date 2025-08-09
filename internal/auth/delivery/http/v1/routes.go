@@ -13,4 +13,6 @@ func (h *handler) Routes(domain *echo.Group) {
 	auth := domain.Group("/auth")
 	auth.POST("/signup", h.signUp)
 	auth.POST("/signin", h.signIn)
+	auth.GET("/refresh", h.Refresh)
+
 }
