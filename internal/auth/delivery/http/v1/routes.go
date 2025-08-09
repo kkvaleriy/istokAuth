@@ -17,4 +17,5 @@ func (h *handler) Routes(domain *echo.Group, secret string) {
 	auth.GET("/refresh", h.Refresh)
 
 	protected := domain.Group("/user", middleware.JWTAuthCheck([]byte(secret)))
+	protected.PUT("/update-password", h.UpdateUserPassword)
 }
