@@ -168,6 +168,20 @@ func (h *handler) Refresh(c echo.Context) error {
 	c.SetCookie(coockie)
 	return c.JSON(http.StatusOK, response)
 }
+
+// @Summary User update password
+// @Tags User
+// @Description User update password
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param input body dtos.UpdateUserPasswordRequest true "New password"
+// @Success 200
+// @Failure 400 {object} httperrors.badRequestErrorResponse "Bad request"
+// @Failure 401 {object} httperrors.authErrorResponse "Invalid token"
+// @Failure 422 {object} httperrors.validationErrorResponse "Bad json in request"
+// @Failure 500 {object} httperrors.internalServerErrorResponse "Internal server error"
+// @Router /user/update-password [put]
 func (h *handler) UpdateUserPassword(c echo.Context) error {
 	user := c.Get("user").(jwt.MapClaims)
 
