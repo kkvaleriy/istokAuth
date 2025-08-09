@@ -44,6 +44,13 @@ func addTokenArgs(t *user.RToken) pgx.NamedArgs {
 	}
 }
 
+func updateUserPasswordArgs(u *user.User) pgx.NamedArgs {
+	return pgx.NamedArgs{
+		"UUID":     u.UUID,
+		"passHash": u.PassHash[:],
+	}
+}
+
 func errorValidation(constraint string, args pgx.NamedArgs) *dtos.ValidationError {
 	var field, value string
 
