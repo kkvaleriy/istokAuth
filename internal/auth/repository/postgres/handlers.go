@@ -112,3 +112,16 @@ func (r *repository) RefreshToken(ctx context.Context, u *user.User, t *user.RTo
 
 	return u, nil
 }
+
+func (r *repository) UpdateUserPassword(ctx context.Context, u *user.User) error {
+	args := updateUserPasswordArgs(u)
+	_, err := r.db.Exec(ctx, queries.UpdateUserPassword, args)
+	if err != nil {
+		if pgErr, ok := err.(*pgconn.PgError); ok && pgErr.Code == "23505" {
+			return errorValidation(pgErr.ConstraintName, args)
+		}
+		return err
+	}
+
+	return nil
+}
