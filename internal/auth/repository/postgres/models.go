@@ -30,7 +30,7 @@ func checkUserByCredentialsArgs(u *user.User) pgx.NamedArgs {
 	return pgx.NamedArgs{
 		"email":    u.Email,
 		"phone":    u.Phone,
-		"passHash": u.PassHash,
+		"passHash": u.PassHash[:],
 	}
 }
 
