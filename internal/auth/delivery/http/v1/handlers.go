@@ -40,17 +40,17 @@ func NewHandler(uc usecase.Authentificator, log logger) *handler {
 // @Produce json
 // @Param input body dtos.CreateUserRequest true "Account information for signup"
 // @Success 200 {object} dtos.CreateUserResponse "Information about the user's account after successful registration"
-// @Failure 400 {object} badRequestErrorResponse "Bad request"
-// @Failure 409 {object} validationDTOErrorResponse "A user already exists"
-// @Failure 422 {object} validationErrorResponse "Bad json in request"
-// @Failure 500 {object} internalServerErrorResponse "Internal server error"
+// @Failure 400 {object} httperrors.badRequestErrorResponse "Bad request"
+// @Failure 409 {object} httperrors.validationDTOErrorResponse "A user already exists"
+// @Failure 422 {object} httperrors.validationErrorResponse "Bad json in request"
+// @Failure 500 {object} httperrors.internalServerErrorResponse "Internal server error"
 // @Router /auth/signup [post]
 func (h *handler) signUp(c echo.Context) error {
 
 	request := &dtos.CreateUserRequest{}
 
 	if err := c.Bind(request); err != nil {
-		return &BadRequestError{Err: err}
+		return &httperrors.BadRequestError{Err: err}
 	}
 
 	h.log.Debug("request for signup", "host", c.Request().Host, "URL", c.Request().URL, "request", request)
@@ -58,14 +58,14 @@ func (h *handler) signUp(c echo.Context) error {
 	validate := validator.New()
 	err := validate.Struct(request)
 	if err != nil {
-		return ErrValidation(err)
+		return httperrors.ErrValidation(err)
 	}
 
 	response, err := h.usecase.SignUp(c.Request().Context(), request)
 	if err != nil {
 		var validationError *dtos.ValidationError
 		if errors.As(err, &validationError) {
-			return &ValidationDTOError{Err: validationError}
+			return &httperrors.ValidationDTOError{Err: validationError}
 		}
 
 		return err
@@ -83,16 +83,16 @@ func (h *handler) signUp(c echo.Context) error {
 // @Produce json
 // @Param input body dtos.SignInRequest true "Account information for signup"
 // @Success 200 {object} dtos.SignInResponse "Json with JWT, refresh token in coockie"
-// @Failure 400 {object} badRequestErrorResponse "Bad request"
-// @Failure 401 {object} authErrorResponse "Invalid credentials"
-// @Failure 422 {object} validationErrorResponse "Bad json in request"
-// @Failure 500 {object} internalServerErrorResponse "Internal server error"
+// @Failure 400 {object} httperrors.badRequestErrorResponse "Bad request"
+// @Failure 401 {object} httperrors.authErrorResponse "Invalid credentials"
+// @Failure 422 {object} httperrors.validationErrorResponse "Bad json in request"
+// @Failure 500 {object} httperrors.internalServerErrorResponse "Internal server error"
 // @Router /auth/signin [post]
 func (h *handler) signIn(c echo.Context) error {
 	request := &dtos.SignInRequest{}
 
 	if err := c.Bind(request); err != nil {
-		return &BadRequestError{Err: err}
+		return &httperrors.BadRequestError{Err: err}
 	}
 
 	h.log.Debug("request for signin", "host", c.Request().Host, "URL", c.Request().URL, "request", request)
@@ -100,14 +100,14 @@ func (h *handler) signIn(c echo.Context) error {
 	validate := validator.New()
 	err := validate.Struct(request)
 	if err != nil {
-		return ErrValidation(err)
+		return httperrors.ErrValidation(err)
 	}
 
 	response, err := h.usecase.SignIn(c.Request().Context(), request)
 	if err != nil {
 		var validationError *dtos.SignInError
 		if errors.As(err, &validationError) {
-			return &AuthError{Err: validationError}
+			return &httperrors.AuthError{Err: validationError}
 		}
 		return err
 	}
