@@ -33,7 +33,7 @@ type tokenConfigurator interface {
 }
 
 type tokenConfig struct {
-	Secret     string
+	Secret     []byte
 	RefreshTTL time.Duration
 	AccessTTL  time.Duration
 }
@@ -47,7 +47,7 @@ type userService struct {
 func NewUserService(tParams tokenConfigurator, repository Repository, log logger) *userService {
 	return &userService{repository: repository,
 		token: &tokenConfig{
-			Secret:     tParams.SecretKey(),
+			Secret:     []byte(tParams.SecretKey()),
 			RefreshTTL: tParams.RefreshTTL(),
 			AccessTTL:  tParams.AccessTTL(),
 		},
