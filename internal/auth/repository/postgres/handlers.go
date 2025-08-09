@@ -80,3 +80,35 @@ func (r *repository) insertInDB(ctx context.Context, query string, args pgx.Name
 
 	return nil
 }
+
+func (r *repository) RefreshToken(ctx context.Context, u *user.User, t *user.RToken) (*user.User, error) {
+	tx, err := r.db.Begin(ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback(ctx)
+	r.log.Debug("the transaction has started")
+
+	err = tx.QueryRow(ctx, queries.DelRToken, t.UUID).Scan(&u.UUID, &u.Nickname)
+	if err != nil {
+		return nil, err
+	}
+	if len(u.UUID) < 1 {
+		return nil, &dtos.SignInError{Message: "Invalid refresh token"}
+	}
+
+	err = tx.QueryRow(ctx, queries.UserType, u.UUID).Scan(&u.UserType)
+	if err != nil {
+		return nil, err
+	}
+	if len(u.UserType) < 1 {
+		return nil, &dtos.SignInError{Message: "Invalid user"}
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return u, nil
+}
