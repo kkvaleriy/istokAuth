@@ -1,4 +1,4 @@
-package v1
+package httperrors
 
 import (
 	"fmt"
@@ -7,6 +7,13 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 )
+
+type logger interface {
+	Debug(msg string, args ...any)
+	Info(msg string, args ...any)
+	Warn(msg string, args ...any)
+	Error(msg string, args ...any)
+}
 
 type HTTPError interface {
 	error
