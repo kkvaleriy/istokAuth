@@ -10,6 +10,7 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	v1 "github.com/kkvaleriy/istokAuth/internal/auth/delivery/http/v1"
+	httperrors "github.com/kkvaleriy/istokAuth/internal/auth/delivery/http/v1/errors"
 	"github.com/kkvaleriy/istokAuth/internal/auth/repository/postgres"
 	"github.com/kkvaleriy/istokAuth/internal/auth/usecase"
 	"github.com/labstack/echo/v4"
@@ -62,7 +63,7 @@ func (app *app) Run() error {
 	gracefulShutdownWG := &sync.WaitGroup{}
 	gracefulShutdownWG.Add(1)
 
-	app.server.echo.HTTPErrorHandler = v1.ErrorsHandler(app.log)
+	app.server.echo.HTTPErrorHandler = httperrors.ErrorsHandler(app.log)
 
 	domain := app.server.echo.Group("/api/v1")
 	domain.GET("/ping", func(c echo.Context) error {
