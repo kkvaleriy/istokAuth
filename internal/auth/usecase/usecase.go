@@ -11,6 +11,8 @@ import (
 type Authentificator interface {
 	SignUp(ctx context.Context, request *dtos.CreateUserRequest) (*dtos.CreateUserResponse, error)
 	SignIn(ctx context.Context, request *dtos.SignInRequest) (*dtos.SignInResponse, error)
+	UpdateUserPassword(ctx context.Context, request *dtos.UpdateUserPasswordRequest) error
+	Refresh(ctx context.Context, request *dtos.UUIDRequest) (*dtos.SignInResponse, error)
 }
 
 type logger interface {
