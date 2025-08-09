@@ -1,7 +1,7 @@
 basePath: /api/v1
 definitions:
   dtos.CreateUserRequest:
-    description: User account information for registration
+    description: User account information for registration.
     properties:
       email:
         example: john@email.com
@@ -31,7 +31,7 @@ definitions:
     - phone
     type: object
   dtos.CreateUserResponse:
-    description: Information about the user's account after successful registration
+    description: Information about the user's account after successful registration.
     properties:
       created_at:
         example: "2006-01-02T03:04:05.5141511+03:00"
@@ -49,17 +49,27 @@ definitions:
       email:
         example: john@email.com
         type: string
-      'password example:':
+      password:
+        example: mySuperPass
+        minLength: 8
         type: string
-      'phone example:':
+      phone:
+        example: 79991112233
         type: integer
+    required:
+    - password
     type: object
   dtos.SignInResponse:
     description: JWT.
     properties:
       jwt:
         type: string
-      rtoken:
+    type: object
+  v1.authErrorResponse:
+    description: Invalid credentials
+    properties:
+      error:
+        example: Invalid credentials
         type: string
     type: object
   v1.badRequestErrorResponse:
@@ -77,10 +87,10 @@ definitions:
         type: string
     type: object
   v1.validationDTOErrorResponse:
-    description: Uniqueness error
+    description: Validation error
     properties:
       error:
-        example: A user with the nickname Johny1 already exists
+        example: Some field failed the uniqueness check
         type: string
     type: object
   v1.validationErrorResponse:
@@ -104,7 +114,7 @@ info:
   version: 1.0.0
 paths:
   /auth/signin:
-    get:
+    post:
       consumes:
       - application/json
       description: User authorization
@@ -126,10 +136,10 @@ paths:
           description: Bad request
           schema:
             $ref: '#/definitions/v1.badRequestErrorResponse'
-        "409":
+        "401":
           description: Invalid credentials
           schema:
-            $ref: '#/definitions/v1.validationDTOErrorResponse'
+            $ref: '#/definitions/v1.authErrorResponse'
         "422":
           description: Bad json in request
           schema:

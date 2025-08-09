@@ -16,7 +16,7 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/auth/signin": {
-            "get": {
+            "post": {
                 "description": "User authorization",
                 "consumes": [
                     "application/json"
@@ -52,10 +52,10 @@ const docTemplate = `{
                             "$ref": "#/definitions/v1.badRequestErrorResponse"
                         }
                     },
-                    "409": {
+                    "401": {
                         "description": "Invalid credentials",
                         "schema": {
-                            "$ref": "#/definitions/v1.validationDTOErrorResponse"
+                            "$ref": "#/definitions/v1.authErrorResponse"
                         }
                     },
                     "422": {
@@ -134,7 +134,7 @@ const docTemplate = `{
     },
     "definitions": {
         "dtos.CreateUserRequest": {
-            "description": "User account information for registration",
+            "description": "User account information for registration.",
             "type": "object",
             "required": [
                 "email",
@@ -173,7 +173,7 @@ const docTemplate = `{
             }
         },
         "dtos.CreateUserResponse": {
-            "description": "Information about the user's account after successful registration",
+            "description": "Information about the user's account after successful registration.",
             "type": "object",
             "properties": {
                 "created_at": {
@@ -193,16 +193,22 @@ const docTemplate = `{
         "dtos.SignInRequest": {
             "description": "User credentials.",
             "type": "object",
+            "required": [
+                "password"
+            ],
             "properties": {
                 "email": {
                     "type": "string",
                     "example": "john@email.com"
                 },
-                "password example:": {
-                    "type": "string"
+                "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "example": "mySuperPass"
                 },
-                "phone example:": {
-                    "type": "integer"
+                "phone": {
+                    "type": "integer",
+                    "example": 79991112233
                 }
             }
         },
@@ -212,9 +218,16 @@ const docTemplate = `{
             "properties": {
                 "jwt": {
                     "type": "string"
-                },
-                "rtoken": {
-                    "type": "string"
+                }
+            }
+        },
+        "v1.authErrorResponse": {
+            "description": "Invalid credentials",
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "Invalid credentials"
                 }
             }
         },
@@ -239,12 +252,12 @@ const docTemplate = `{
             }
         },
         "v1.validationDTOErrorResponse": {
-            "description": "Uniqueness error",
+            "description": "Validation error",
             "type": "object",
             "properties": {
                 "error": {
                     "type": "string",
-                    "example": "A user with the nickname Johny1 already exists"
+                    "example": "Some field failed the uniqueness check"
                 }
             }
         },
