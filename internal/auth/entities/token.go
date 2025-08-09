@@ -1,6 +1,8 @@
 package user
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+)
 
 type RToken struct {
 	UUID      uuid.UUID
@@ -8,4 +10,10 @@ type RToken struct {
 	Nickname  string
 	CreatedAt int64
 	ExpiresAt int64
+}
+
+func TokenRefresh(UUID uuid.UUID) *RToken {
+	return &RToken{
+		UUID: UUID,
+	}
 }
