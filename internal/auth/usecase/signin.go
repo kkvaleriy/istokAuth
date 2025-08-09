@@ -11,26 +11,26 @@ import (
 )
 
 func (uc *userService) SignIn(ctx context.Context, request *dtos.SignInRequest) (*dtos.SignInResponse, error) {
-	u, err := user.SignIn(request)
+	usr, err := user.SignIn(request)
 	if err != nil {
 		return nil, err
 	}
 
-	u, err = uc.repository.CheckUserByCredentials(ctx, u)
+	usr, err = uc.repository.CheckUserByCredentials(ctx, usr)
 	if err != nil {
 		return nil, err
 	}
 
-	if !u.IsActive {
+	if !usr.IsActive {
 		return nil, fmt.Errorf("Invalid credentials")
 	}
 
-	jwtToken, err := uc.GenerateJWT(u)
+	jwtToken, err := uc.GenerateJWT(usr)
 	if err != nil {
 		return nil, fmt.Errorf("Internal error")
 	}
 
-	rToken := u.RefreshToken(uc.token.RefreshTTL)
+	rToken := usr.RefreshToken(uc.token.RefreshTTL)
 
 	err = uc.repository.AddToken(ctx, rToken)
 	if err != nil {
