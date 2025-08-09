@@ -123,3 +123,38 @@ func (h *handler) signIn(c echo.Context) error {
 	c.SetCookie(coockie)
 	return c.JSON(http.StatusOK, response)
 }
+func (h *handler) Refresh(c echo.Context) error {
+	refreshTokenCookie, err := c.Request().Cookie("refreshToken")
+	if err != nil {
+		return &httperrors.BadRequestError{Err: errors.New("cookie refreshToken not set")}
+	}
+
+	if refreshTokenCookie.Expires.Unix() > time.Now().Unix() {
+		return &httperrors.BadRequestError{Err: errors.New("cookie refreshToken is expiret")}
+	}
+
+	request, err := dtos.RequestByUUID(refreshTokenCookie.Value)
+	if err != nil {
+		return &httperrors.BadRequestError{errors.New("bad value of the refreshToken cookie")}
+	}
+
+	response, err := h.usecase.Refresh(c.Request().Context(), request)
+	if err != nil {
+		var validationError *dtos.SignInError
+		if errors.As(err, &validationError) {
+			return &httperrors.AuthError{Err: validationError}
+		}
+		return err
+	}
+
+	coockie := &http.Cookie{
+		Name:     "refreshToken",
+		Value:    response.RToken,
+		Expires:  response.ExpiresRToken,
+		Path:     "/api/v1/auth",
+		HttpOnly: true,
+	}
+
+	c.SetCookie(coockie)
+	return c.JSON(http.StatusOK, response)
+}
