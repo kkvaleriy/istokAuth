@@ -1,4 +1,4 @@
-package querys
+package queries
 
 import _ "embed"
 

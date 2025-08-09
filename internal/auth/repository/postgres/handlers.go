@@ -7,7 +7,7 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 	user "github.com/kkvaleriy/istokAuth/internal/auth/entities"
-	"github.com/kkvaleriy/istokAuth/internal/auth/repository/postgres/querys"
+	"github.com/kkvaleriy/istokAuth/internal/auth/repository/postgres/queries"
 )
 
 type logger interface {
@@ -30,13 +30,13 @@ func (r *repository) AddUser(ctx context.Context, u *user.User) error {
 	args := createUserArgs(u)
 	r.log.Debug("the args for query have been created", "args", args)
 
-	return r.insertInDB(ctx, querys.AddUser, args)
+	return r.insertInDB(ctx, queries.AddUser, args)
 }
 
 func (r *repository) CheckUserByCredentials(ctx context.Context, u *user.User) (*user.User, error) {
 	args := checkUserByCredentialsArgs(u)
 
-	err := r.db.QueryRow(ctx, querys.CheckUserByCredentials, args).Scan(&u.UUID, &u.Nickname, &u.UserType, &u.IsActive)
+	err := r.db.QueryRow(ctx, queries.CheckUserByCredentials, args).Scan(&u.UUID, &u.Nickname, &u.UserType, &u.IsActive)
 	if err != nil {
 		return nil, signInError(err)
 	}
@@ -48,7 +48,7 @@ func (r *repository) AddToken(ctx context.Context, t *user.RToken) error {
 	args := addTokenArgs(t)
 	r.log.Debug("the args for query have been created", "args", args)
 
-	return r.insertInDB(ctx, querys.AddRToken, args)
+	return r.insertInDB(ctx, queries.AddRToken, args)
 
 }
 
