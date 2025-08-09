@@ -11,9 +11,9 @@ type SignInRequest struct {
 
 // @Description JWT.
 type SignInResponse struct {
-	JWT           string `json:"jwt"`
-	RToken        string
-	ExpiresRToken time.Time
+	JWT           string    `json:"jwt"`
+	RToken        string    `json:"-"`
+	ExpiresRToken time.Time `json:"-"`
 }
 
 type SignInError struct {
