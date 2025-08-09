@@ -103,7 +103,7 @@ func (h *handler) signIn(c echo.Context) error {
 	response, err := h.usecase.SignIn(c.Request().Context(), request)
 	if err != nil {
 		var validationError *dtos.SignInError
-		if errors.As(err, validationError) {
+		if errors.As(err, &validationError) {
 			return &ValidationDTOError{Err: validationError}
 		}
 		return err
