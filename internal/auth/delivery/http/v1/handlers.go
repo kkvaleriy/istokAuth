@@ -168,3 +168,43 @@ func (h *handler) Refresh(c echo.Context) error {
 	c.SetCookie(coockie)
 	return c.JSON(http.StatusOK, response)
 }
+func (h *handler) UpdateUserPassword(c echo.Context) error {
+	user := c.Get("user").(jwt.MapClaims)
+
+	sub, err := user.GetSubject()
+	if err != nil {
+		return &httperrors.BadRequestError{}
+	}
+
+	userUUID, err := dtos.RequestByUUID(sub)
+	if err != nil {
+		return &httperrors.BadRequestError{}
+	}
+
+	request := &dtos.UpdateUserPasswordRequest{}
+
+	if err := c.Bind(request); err != nil {
+		return &httperrors.BadRequestError{Err: err}
+	}
+
+	validate := validator.New()
+
+	err = validate.Struct(request)
+	if err != nil {
+		return httperrors.ErrValidation(err)
+	}
+
+	request.ID = userUUID
+
+	err = h.usecase.UpdateUserPassword(c.Request().Context(), request)
+	if err != nil {
+		var validationError *dtos.ValidationError
+		if errors.As(err, &validationError) {
+			return &httperrors.ValidationDTOError{Err: validationError}
+		}
+
+		return err
+	}
+
+	return c.NoContent(http.StatusOK)
+}
