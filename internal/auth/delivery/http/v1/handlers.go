@@ -3,8 +3,11 @@ package v1
 import (
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/golang-jwt/jwt/v5"
+	httperrors "github.com/kkvaleriy/istokAuth/internal/auth/delivery/http/v1/errors"
 	"github.com/kkvaleriy/istokAuth/internal/auth/dtos"
 	"github.com/kkvaleriy/istokAuth/internal/auth/usecase"
 	"github.com/labstack/echo/v4"
