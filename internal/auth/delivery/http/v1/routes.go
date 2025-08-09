@@ -2,11 +2,12 @@ package v1
 
 import (
 	_ "github.com/kkvaleriy/istokAuth/docs"
+	"github.com/kkvaleriy/istokAuth/internal/auth/delivery/http/v1/middleware"
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
-func (h *handler) Routes(domain *echo.Group) {
+func (h *handler) Routes(domain *echo.Group, secret string) {
 	// Swagger endpoint
 	domain.GET("/swagger/*", echoSwagger.WrapHandler)
 

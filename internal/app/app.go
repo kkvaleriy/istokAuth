@@ -73,7 +73,7 @@ func (app *app) Run() error {
 	uc := usecase.NewUserService(app.tokenParams, pg, app.log)
 	ht := v1.NewHandler(uc, app.log)
 
-	ht.Routes(domain)
+	ht.Routes(domain, app.tokenParams.SecretKey())
 
 	err := app.server.echo.Start(app.server.cfg.ServerPort())
 	if err != nil {
