@@ -1,4 +1,4 @@
-INSERT INTO public.users (
+INSERT INTO users (
     name,
     lastname,
     nickname,
