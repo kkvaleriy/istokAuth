@@ -123,6 +123,16 @@ func (h *handler) signIn(c echo.Context) error {
 	c.SetCookie(coockie)
 	return c.JSON(http.StatusOK, response)
 }
+
+// @Summary Refresh tokens
+// @Tags Authorization
+// @Description Get new refresh and access tokens by refresh token cookie
+// @Produce json
+// @Success 200 {object} dtos.SignInResponse "Json with JWT, refresh token in coockie"
+// @Failure 400 {object} httperrors.badRequestErrorResponse "Bad request"
+// @Failure 401 {object} httperrors.authErrorResponse "Invalid user"
+// @Failure 500 {object} httperrors.internalServerErrorResponse "Internal server error"
+// @Router /auth/refresh [get]
 func (h *handler) Refresh(c echo.Context) error {
 	refreshTokenCookie, err := c.Request().Cookie("refreshToken")
 	if err != nil {
