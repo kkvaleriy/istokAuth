@@ -81,7 +81,7 @@ func (h *handler) signUp(c echo.Context) error {
 // @Description User authorization
 // @Accept json
 // @Produce json
-// @Param input body dtos.SignInRequest true "Account information for signup"
+// @Param input body dtos.SignInRequest true "Account information for signin"
 // @Success 200 {object} dtos.SignInResponse "Json with JWT, refresh token in coockie"
 // @Failure 400 {object} httperrors.badRequestErrorResponse "Bad request"
 // @Failure 401 {object} httperrors.authErrorResponse "Invalid credentials"
