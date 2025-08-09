@@ -84,7 +84,7 @@ func (h *handler) signUp(c echo.Context) error {
 // @Failure 409 {object} validationDTOErrorResponse "Invalid credentials"
 // @Failure 422 {object} validationErrorResponse "Bad json in request"
 // @Failure 500 {object} internalServerErrorResponse "Internal server error"
-// @Router /auth/signin [get]
+// @Router /auth/signin [post]
 func (h *handler) signIn(c echo.Context) error {
 	request := &dtos.SignInRequest{}
 
