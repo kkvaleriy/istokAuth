@@ -14,12 +14,12 @@ import (
 func (uc *userService) SignIn(ctx context.Context, request *dtos.SignInRequest) (*dtos.SignInResponse, error) {
 	usr, err := user.SignIn(request)
 	if err != nil {
-		return nil, fmt.Errorf("signin: %w")
+		return nil, fmt.Errorf("signin: %w", err)
 	}
 
 	usr, err = uc.repository.CheckUserByCredentials(ctx, usr)
 	if err != nil {
-		return nil, fmt.Errorf("signin: %w")
+		return nil, fmt.Errorf("signin: %w", err)
 	}
 
 	if !usr.IsActive {
@@ -35,7 +35,7 @@ func (uc *userService) SignIn(ctx context.Context, request *dtos.SignInRequest) 
 
 	err = uc.repository.AddToken(ctx, rToken)
 	if err != nil {
-		return nil, fmt.Errorf("signin: %w")
+		return nil, fmt.Errorf("signin: %w", err)
 	}
 
 	return &dtos.SignInResponse{JWT: jwtToken, RToken: rToken.UUID.String(),
