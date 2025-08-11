@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -13,28 +14,28 @@ import (
 func (uc *userService) SignIn(ctx context.Context, request *dtos.SignInRequest) (*dtos.SignInResponse, error) {
 	usr, err := user.SignIn(request)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("signin: %w")
 	}
 
 	usr, err = uc.repository.CheckUserByCredentials(ctx, usr)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("signin: %w")
 	}
 
 	if !usr.IsActive {
-		return nil, fmt.Errorf("Invalid credentials")
+		return nil, errors.New("Invalid credentials")
 	}
 
 	jwtToken, err := uc.GenerateJWT(usr)
 	if err != nil {
-		return nil, fmt.Errorf("Internal error")
+		return nil, errors.New("Internal error")
 	}
 
 	rToken := usr.RefreshToken(uc.token.RefreshTTL)
 
 	err = uc.repository.AddToken(ctx, rToken)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("signin: %w")
 	}
 
 	return &dtos.SignInResponse{JWT: jwtToken, RToken: rToken.UUID.String(),
