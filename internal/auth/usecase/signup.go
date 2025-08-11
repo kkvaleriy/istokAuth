@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/kkvaleriy/istokAuth/internal/auth/dtos"
 	user "github.com/kkvaleriy/istokAuth/internal/auth/entities"
@@ -10,12 +11,12 @@ import (
 func (uc *userService) SignUp(ctx context.Context, request *dtos.CreateUserRequest) (*dtos.CreateUserResponse, error) {
 	userForCreate, err := user.SignUp(request)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("signup: %w", err)
 	}
 
 	err = uc.repository.AddUser(ctx, userForCreate)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("signup: %w", err)
 	}
 
 	response := &dtos.CreateUserResponse{
