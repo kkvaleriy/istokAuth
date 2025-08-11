@@ -53,7 +53,7 @@ func (h *handler) signUp(c echo.Context) error {
 		return &httperrors.BadRequestError{Err: err}
 	}
 
-	h.log.Debug("request for signup", "host", c.Request().Host, "URL", c.Request().URL, "request", request)
+	h.log.Debug("Request for signup", "host", c.Request().Host, "URL", c.Request().URL, "from", c.RealIP(), "request", request)
 
 	validate := validator.New()
 	err := validate.Struct(request)
@@ -71,7 +71,8 @@ func (h *handler) signUp(c echo.Context) error {
 		return err
 	}
 
-	h.log.Info("new user has been created", "host", c.Request().Host, "URL", c.Request().URL, "request", request, "result", response)
+	h.log.Debug("Successfully signup", "host", c.Request().Host, "URL", c.Request().URL, "from", c.RealIP(), "request", request)
+	h.log.Info("New user has been created", "user", request.Nickname, "from", c.RealIP())
 
 	return c.JSON(http.StatusCreated, response)
 }
@@ -95,7 +96,7 @@ func (h *handler) signIn(c echo.Context) error {
 		return &httperrors.BadRequestError{Err: err}
 	}
 
-	h.log.Debug("request for signin", "host", c.Request().Host, "URL", c.Request().URL, "request", request)
+	h.log.Debug("Request for signin", "host", c.Request().Host, "URL", c.Request().URL, "from", c.RealIP(), "request", request)
 
 	validate := validator.New()
 	err := validate.Struct(request)
@@ -120,6 +121,9 @@ func (h *handler) signIn(c echo.Context) error {
 		HttpOnly: true,
 	}
 
+	h.log.Debug("Successfully signin", "host", c.Request().Host, "URL", c.Request().URL, "from", c.RealIP(), "request", request)
+	h.log.Info("The user has been successfully authenticated", "email", request.Email, "phone", request.Phone, "from", c.RealIP())
+
 	c.SetCookie(coockie)
 	return c.JSON(http.StatusOK, response)
 }
@@ -134,12 +138,14 @@ func (h *handler) signIn(c echo.Context) error {
 // @Failure 500 {object} httperrors.internalServerErrorResponse "Internal server error"
 // @Router /auth/refresh [get]
 func (h *handler) Refresh(c echo.Context) error {
+	h.log.Debug("Request for refresh tokens", "host", c.Request().Host, "URL", c.Request().URL, "from", c.RealIP())
+
 	refreshTokenCookie, err := c.Request().Cookie("refreshToken")
 	if err != nil {
 		return &httperrors.BadRequestError{Err: errors.New("cookie refreshToken not set")}
 	}
 
-	if refreshTokenCookie.Expires.Unix() > time.Now().Unix() {
+	if refreshTokenCookie.Expires.After(time.Now()) {
 		return &httperrors.BadRequestError{Err: errors.New("cookie refreshToken is expiret")}
 	}
 
@@ -165,6 +171,9 @@ func (h *handler) Refresh(c echo.Context) error {
 		HttpOnly: true,
 	}
 
+	h.log.Debug("Tokens have been successfully updated", "host", c.Request().Host, "URL", c.Request().URL, "from", c.RealIP())
+	h.log.Info("The user has successfully updated the tokens", "from", c.RealIP())
+
 	c.SetCookie(coockie)
 	return c.JSON(http.StatusOK, response)
 }
@@ -184,6 +193,8 @@ func (h *handler) Refresh(c echo.Context) error {
 // @Router /user/update-password [put]
 func (h *handler) UpdateUserPassword(c echo.Context) error {
 	user := c.Get("user").(jwt.MapClaims)
+
+	h.log.Debug("Request for update password", "from", c.RealIP())
 
 	sub, err := user.GetSubject()
 	if err != nil {
@@ -219,6 +230,8 @@ func (h *handler) UpdateUserPassword(c echo.Context) error {
 
 		return err
 	}
+
+	h.log.Info("The user has successfully updated password", "from", c.RealIP())
 
 	return c.NoContent(http.StatusOK)
 }

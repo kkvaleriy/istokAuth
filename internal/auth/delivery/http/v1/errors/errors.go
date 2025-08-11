@@ -141,10 +141,10 @@ func ErrorsHandler(log logger) echo.HTTPErrorHandler {
 			message = &internalServerErrorResponse{Error: "Internal Server Error"}
 		}
 
-		log.Error("request error", "error", err.Error(), "status", status)
+		log.Error("Request error", "error", err.Error(), "status", status, "from", c.RealIP())
 
 		if err := c.JSON(status, message); err != nil {
-			log.Error("failed to send error response", "error", err.Error())
+			log.Error("Failed to send error response", "from", c.RealIP(), "error", err.Error())
 		}
 	}
 }
