@@ -103,7 +103,7 @@ func TestSignUp(t *testing.T) {
 				Phone:    79123456789,
 			},
 			want:    nil,
-			wantErr: fmt.Sprintf("the password of user must be more than %v characters long", minLenOfPassword),
+			wantErr: fmt.Sprintf("the password of user can't be empty or less then %v", minLenOfPassword),
 		},
 		{
 			name: "invalid phone",
